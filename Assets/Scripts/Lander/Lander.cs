@@ -1,8 +1,6 @@
-﻿using UnityEditorInternal;
+﻿using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody2D))]
 public class Lander : MonoBehaviour
 {
     [SerializeField] private float Force = 700f;
@@ -10,50 +8,27 @@ public class Lander : MonoBehaviour
     [SerializeField] private float SoftLandingVelocity = 3f;
     [SerializeField] private float MinDotVector = .90f;
 
-    private Rigidbody2D _rigidbody2D;
+    public float GetForce => Force;
+    public float GetTurnSpeed => TurnSpeed;
+    public float GetSoftLandingVelocity => SoftLandingVelocity;
+    public float GetMinDotVector => MinDotVector;
 
-    private void Awake()
+    //public event EventHandler Crashed;
+    //public event EventHandler Landed;
+
+    internal void OnLandingPadContact(LandingPad landingPad, Collision2D collision2D)
     {
-        _rigidbody2D = GetComponent<Rigidbody2D>();
-    }
-
-    private void FixedUpdate()
-    {
-        if (Keyboard.current.upArrowKey.isPressed)
-        {
-            _rigidbody2D.AddForce(Force * transform.up * Time.deltaTime);
-        }
-
-        if (Keyboard.current.leftArrowKey.isPressed)
-        {
-            _rigidbody2D.AddTorque(TurnSpeed * Time.deltaTime);
-        }
-
-        if (Keyboard.current.rightArrowKey.isPressed)
-        {
-            _rigidbody2D.AddTorque(-TurnSpeed * Time.deltaTime);
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision2D)
-    {
-        if (!collision2D.gameObject.TryGetComponent(out LandingPad landingPad))
-        {
-            Debug.Log("Crashed!");
-            return;
-        }
-
         float relativeVelocityMagnitude = collision2D.relativeVelocity.magnitude;
         if (relativeVelocityMagnitude > SoftLandingVelocity)
         {
-            Debug.Log("Landed too hard!");
+            Crash("Landed too hard!");
             return;
         }
 
         float dotVector = Vector2.Dot(Vector2.up, transform.up);
         if (dotVector < MinDotVector)
         {
-            Debug.Log("Landed on a too steep angle!");
+            Crash("Landed on a too steep angle!");
             return;
         }
 
@@ -68,5 +43,22 @@ public class Lander : MonoBehaviour
 
         int score = Mathf.RoundToInt((landingAngleScore + landingSpeedScore) * landingPad.GetScore);
         Debug.Log(score);
+    }
+
+    internal void OnPlanetSurfaceContact()
+    {
+        Crash("Crashed!");
+        return;
+    }
+
+    private void Crash(string message)
+    {
+        Debug.Log(message);
+        //Crashed?.Invoke();
+    }
+
+    private void Land()
+    {
+        //Landed?.Invoke();
     }
 }

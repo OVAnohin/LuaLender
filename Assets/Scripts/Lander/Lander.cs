@@ -120,4 +120,9 @@ public class Lander : MonoBehaviour
         Debug.Log(message);
         //Landed?.Invoke();
     }
+
+    internal void OnFuelPickupContact(FuelPickup fuelPickup)
+    {
+        _fuelTank.AddFuel = fuelPickup.GetVolume;
+    }
 }

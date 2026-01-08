@@ -20,4 +20,12 @@ public class LanderCollision : MonoBehaviour
             _lander.OnPlanetSurfaceContact();
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collider2D)
+    {
+        if (collider2D.gameObject.TryGetComponent(out FuelPickup fuelPickup))
+        {
+            _lander.OnFuelPickupContact(fuelPickup);
+        }
+    }
 }

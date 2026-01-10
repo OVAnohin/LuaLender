@@ -14,24 +14,48 @@ public class Lander : MonoBehaviour
     public float GetSoftLandingVelocity => SoftLandingVelocity;
     public float GetMinDotVector => MinDotVector;
 
+    public event EventHandler ScoreChanged;
     //public event EventHandler Crashed;
     //public event EventHandler Landed;
+
+    private int _score = 0;
+
+    public int Score
+    {
+        get
+        {
+            return _score;
+        }
+        set
+        {
+            if (value > 0)
+            {
+                _score += value;
+                ScoreChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+    }
+
 
     private bool _isAlive = true;
     public bool IsAlive => _isAlive;
 
-    private FuelTank _fuelTank;
+    private LanderFuelTank _fuelTank;
     private LanderMover _landerMover;
 
     private void Awake()
     {
-        _fuelTank = GetComponent<FuelTank>();
+        _fuelTank = GetComponent<LanderFuelTank>();
         _landerMover = GetComponent<LanderMover>();
+    }
+
+    private void Start()
+    {
+        ScoreChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnEnable()
     {
-        _fuelTank.FuelTankEmpty += FuelTankEmpty;
         _landerMover.OnUpForce += LanderMoverOnAllEngineForce;
         _landerMover.OnRightForce += LanderMoverOnOneEngineForce;
         _landerMover.OnLeftForce += LanderMoverOnOneEngineForce;
@@ -39,7 +63,6 @@ public class Lander : MonoBehaviour
 
     private void OnDisable()
     {
-        _fuelTank.FuelTankEmpty -= FuelTankEmpty;
         _landerMover.OnUpForce -= LanderMoverOnAllEngineForce;
         _landerMover.OnRightForce -= LanderMoverOnOneEngineForce;
         _landerMover.OnLeftForce -= LanderMoverOnOneEngineForce;
@@ -55,12 +78,6 @@ public class Lander : MonoBehaviour
     {
         int engineCount = 3;
         _fuelTank.Consume(engineCount, FuelConsumptionAmount);
-    }
-
-    private void FuelTankEmpty(object sender, EventArgs e)
-    {
-        Debug.Log("Fuel Tank is Empty !!!");
-        return;
     }
 
     internal void OnLandingPadContact(LandingPad landingPad, Collision2D collision2D)
@@ -94,13 +111,14 @@ public class Lander : MonoBehaviour
         float maxScoreAmountLandingSpeed = 100f;
         float landingSpeedScore = (SoftLandingVelocity - relativeVelocityMagnitude) * maxScoreAmountLandingSpeed;
 
-        int score = Mathf.RoundToInt((landingAngleScore + landingSpeedScore) * landingPad.GetScore);
-        Land(score.ToString());
+        _score += Mathf.RoundToInt((landingAngleScore + landingSpeedScore) * landingPad.GetScore);
+        ScoreChanged?.Invoke(this, EventArgs.Empty);
+        Land();
     }
 
     internal void OnPlanetSurfaceContact()
     {
-        Crash("Crashed!");
+        Crash("OnPlanetSurfaceContact Crashed!");
         return;
     }
 
@@ -114,15 +132,20 @@ public class Lander : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void Land(string message)
+    private void Land()
     {
         Debug.Log("Successful landing");
-        Debug.Log(message);
         //Landed?.Invoke();
     }
 
     internal void OnFuelPickupContact(FuelPickup fuelPickup)
     {
         _fuelTank.AddFuel = fuelPickup.GetVolume;
+    }
+
+    internal void OnCoinPickupContact(CoinPickup coinPickup)
+    {
+        _score += coinPickup.GetPoints;
+        ScoreChanged?.Invoke(this, EventArgs.Empty);
     }
 }

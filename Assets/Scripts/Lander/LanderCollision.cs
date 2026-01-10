@@ -27,5 +27,10 @@ public class LanderCollision : MonoBehaviour
         {
             _lander.OnFuelPickupContact(fuelPickup);
         }
+
+        if (collider2D.gameObject.TryGetComponent(out CoinPickup coinPickup))
+        {
+            _lander.OnCoinPickupContact(coinPickup);
+        }
     }
 }

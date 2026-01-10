@@ -12,13 +12,13 @@ public class LanderMover : MonoBehaviour
 
     private Rigidbody2D _rigidbody2D;
     private Lander _lander;
-    private FuelTank _fuelTank;
+    private LanderFuelTank _fuelTank;
 
     private void Awake()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _lander = GetComponent<Lander>();
-        _fuelTank = GetComponent<FuelTank>();
+        _fuelTank = GetComponent<LanderFuelTank>();
     }
 
     private void FixedUpdate()

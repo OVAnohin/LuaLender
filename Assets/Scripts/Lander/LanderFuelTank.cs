@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class FuelTank : MonoBehaviour
+public class LanderFuelTank : MonoBehaviour
 {
     [Header("Fuel")]
     [SerializeField] private float FuelAmount = 100f;
@@ -18,7 +18,14 @@ public class FuelTank : MonoBehaviour
         }
     }
 
-    public event EventHandler FuelTankEmpty;
+    public float Fuel => FuelAmount;
+
+    public event EventHandler FuelChanged;
+
+    private void Start()
+    {
+        FuelChanged?.Invoke(this, EventArgs.Empty);
+    }
 
     public void Consume(int flowRateCoefficient, float fuelConsumptionAmount)
     {
@@ -31,9 +38,9 @@ public class FuelTank : MonoBehaviour
         {
             FuelAmount = 0f;
             _hasFuel = false;
-            FuelTankEmpty?.Invoke(this, EventArgs.Empty);
+            Debug.Log("Fuel Tank is Empty !!!");
         }
 
-        Debug.Log(FuelAmount);
+        FuelChanged?.Invoke(this, EventArgs.Empty);
     }
 }

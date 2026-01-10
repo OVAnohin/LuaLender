@@ -1,6 +1,7 @@
 ﻿using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LanderHUD : MonoBehaviour
 {
@@ -9,11 +10,11 @@ public class LanderHUD : MonoBehaviour
     [SerializeField] private LanderMover LanderMover;
     [SerializeField] private TextMeshProUGUI TextScore;
     [SerializeField] private TextMeshProUGUI TextTime;
-    [SerializeField] private TextMeshProUGUI TextFuel;
-    [SerializeField] private GameObject ImageSpeedUp;
-    [SerializeField] private GameObject ImageSpeedDown;
-    [SerializeField] private GameObject ImageSpeedLeft;
-    [SerializeField] private GameObject ImageSpeedRight;
+    [SerializeField] private GameObject UpArrow;
+    [SerializeField] private GameObject DownArrow;
+    [SerializeField] private GameObject LeftArrow;
+    [SerializeField] private GameObject RightArrow;
+    [SerializeField] private Image FuelBar;
 
     private float _time;
     private Rigidbody2D _landerRigidbody2D;
@@ -21,28 +22,22 @@ public class LanderHUD : MonoBehaviour
     private void Awake()
     {
         _landerRigidbody2D = LanderMover.GetComponent<Rigidbody2D>();
-        ImageSpeedUp.SetActive(false);
-        ImageSpeedDown.SetActive(false);
-        ImageSpeedLeft.SetActive(false);
-        ImageSpeedRight.SetActive(false);
+        UpArrow.SetActive(false);
+        DownArrow.SetActive(false);
+        LeftArrow.SetActive(false);
+        RightArrow.SetActive(false);
     }
 
     private void OnEnable()
     {
         Lander.ScoreChanged += UpdateScore;
         LanderFuelTank.FuelChanged += UpdateFuel;
-        LanderMover.OnUpForce += LanderUpForce;
-        LanderMover.OnLeftForce += LanderLeftForce;
-        LanderMover.OnRightForce += LanderRightForce;
     }
 
     private void OnDisable()
     {
         Lander.ScoreChanged -= UpdateScore;
         LanderFuelTank.FuelChanged -= UpdateFuel;
-        LanderMover.OnUpForce -= LanderUpForce;
-        LanderMover.OnLeftForce -= LanderLeftForce;
-        LanderMover.OnRightForce -= LanderRightForce;
     }
 
     private void Start()
@@ -54,7 +49,7 @@ public class LanderHUD : MonoBehaviour
     private void Update()
     {
         UpdateTime();
-        LanderDownForce();
+        UpdateMovementArrows();
     }
 
     private void UpdateTime()
@@ -63,31 +58,15 @@ public class LanderHUD : MonoBehaviour
         TextTime.text = _time.ToString();
     }
 
-    private void LanderUpForce(object sender, EventArgs e)
+    private void UpdateMovementArrows()
     {
-        ImageSpeedDown.SetActive(false);
-        ImageSpeedUp.SetActive(true);
-    }
+        Vector2 v = _landerRigidbody2D.linearVelocity;
+        const float threshold = 0.1f;
 
-    private void LanderDownForce()
-    {
-        if (_landerRigidbody2D.linearVelocityY < 0)
-        {
-            ImageSpeedUp.SetActive(false);
-            ImageSpeedDown.SetActive(true);
-        }
-    }
-
-    private void LanderRightForce(object sender, EventArgs e)
-    {
-        ImageSpeedRight.SetActive(false);
-        ImageSpeedLeft.SetActive(true);
-    }
-
-    private void LanderLeftForce(object sender, EventArgs e)
-    {
-        ImageSpeedLeft.SetActive(false);
-        ImageSpeedRight.SetActive(true);
+        UpArrow.SetActive(v.y > threshold);
+        DownArrow.SetActive(v.y < -threshold);
+        RightArrow.SetActive(v.x > threshold);
+        LeftArrow.SetActive(v.x < -threshold);
     }
 
     private void UpdateScore(object sender, EventArgs e)
@@ -97,6 +76,6 @@ public class LanderHUD : MonoBehaviour
 
     private void UpdateFuel(object sender, EventArgs e)
     {
-        TextFuel.text = LanderFuelTank.Fuel.ToString();
+        FuelBar.fillAmount = LanderFuelTank.Fuel;
     }
 }

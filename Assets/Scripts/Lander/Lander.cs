@@ -1,13 +1,15 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class Lander : MonoBehaviour
+public partial class Lander : MonoBehaviour
 {
     [SerializeField] private float Force = 700f;
     [SerializeField] private float TurnSpeed = 100f;
     [SerializeField] private float SoftLandingVelocity = 3f;
     [SerializeField] private float MinDotVector = .90f;
     [SerializeField] private float FuelConsumptionAmount = 1f;
+    [SerializeField] private GameFlowController GameFlow;
 
     public float GetForce => Force;
     public float GetTurnSpeed => TurnSpeed;
@@ -16,7 +18,8 @@ public class Lander : MonoBehaviour
 
     public event EventHandler ScoreChanged;
     //public event EventHandler Crashed;
-    //public event EventHandler Landed;
+    //public event EventHandler OnLanded;
+    public event EventHandler<LandingScoreCalculatedEventArgs> OnLanded;
 
     private int _score = 0;
 
@@ -47,6 +50,7 @@ public class Lander : MonoBehaviour
     {
         _fuelTank = GetComponent<LanderFuelTank>();
         _landerMover = GetComponent<LanderMover>();
+        GameFlow.SetState(GameState.Ready);
     }
 
     private void Start()
@@ -88,21 +92,24 @@ public class Lander : MonoBehaviour
         float relativeVelocityMagnitude = collision2D.relativeVelocity.magnitude;
         if (relativeVelocityMagnitude > SoftLandingVelocity)
         {
-            Crash("Landed too hard!");
+            Crash(0, 0, relativeVelocityMagnitude, LandingType.TooFastLanding);
             return;
         }
 
         float dotVector = Vector2.Dot(Vector2.up, transform.up);
         if (dotVector < MinDotVector)
         {
-            Crash("Landed on a too steep angle!");
+            Crash(0, dotVector, relativeVelocityMagnitude, LandingType.TooStepAngle);
             return;
         }
 
-        LandingPointsCalculation(landingPad, relativeVelocityMagnitude, dotVector);
+        int landingScore = LandingPointsCalculation(landingPad, relativeVelocityMagnitude, dotVector);
+        _score += landingScore;
+        ScoreChanged?.Invoke(this, EventArgs.Empty);
+        Land(landingScore, dotVector, relativeVelocityMagnitude);
     }
 
-    private void LandingPointsCalculation(LandingPad landingPad, float relativeVelocityMagnitude, float dotVector)
+    private int LandingPointsCalculation(LandingPad landingPad, float relativeVelocityMagnitude, float dotVector)
     {
         float maxScoreAmountLandingAngle = 100f;
         float scoreDotVectorMultiplier = 10f;
@@ -111,31 +118,31 @@ public class Lander : MonoBehaviour
         float maxScoreAmountLandingSpeed = 100f;
         float landingSpeedScore = (SoftLandingVelocity - relativeVelocityMagnitude) * maxScoreAmountLandingSpeed;
 
-        _score += Mathf.RoundToInt((landingAngleScore + landingSpeedScore) * landingPad.GetScore);
-        ScoreChanged?.Invoke(this, EventArgs.Empty);
-        Land();
+        return Mathf.RoundToInt((landingAngleScore + landingSpeedScore) * landingPad.GetScore);
     }
 
     internal void OnPlanetSurfaceContact()
     {
-        Crash("OnPlanetSurfaceContact Crashed!");
-        return;
+        int landingScore = 0;
+        float landingAngle = 0;
+        float landingSpeed = 0;
+        Crash(landingScore, landingAngle, landingSpeed, LandingType.WrongLandingArea);
     }
 
-    private void Crash(string message)
+    private void Crash(int landingScore, float landingAngle, float landingSpeed, LandingType landingType)
     {
         _isAlive = false;
-        Debug.Log("BIG BAGA BOOM");
-        //Crashed?.Invoke(this, EventArgs.Empty);
-        Debug.Log(message);
-        //Crashed?.Invoke();
+        LandingScoreCalculatedEventArgs eventArgs = new LandingScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, landingType);
+        OnLanded?.Invoke(this, eventArgs);
         gameObject.SetActive(false);
+        GameFlow.SetState(GameState.Crashed);
     }
 
-    private void Land()
+    private void Land(int landingScore, float landingAngle, float landingSpeed)
     {
-        Debug.Log("Successful landing");
-        //Landed?.Invoke();
+        LandingScoreCalculatedEventArgs eventArgs = new LandingScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, LandingType.Success);
+        OnLanded?.Invoke(this, eventArgs);
+        GameFlow.SetState(GameState.Landed);
     }
 
     internal void OnFuelPickupContact(FuelPickup fuelPickup)

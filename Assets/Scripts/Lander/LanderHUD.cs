@@ -15,6 +15,7 @@ public class LanderHUD : MonoBehaviour
     [SerializeField] private GameObject LeftArrow;
     [SerializeField] private GameObject RightArrow;
     [SerializeField] private Image FuelBar;
+    [SerializeField] private GameFlowController GameFlow;
 
     private float _time;
     private Rigidbody2D _landerRigidbody2D;
@@ -54,6 +55,9 @@ public class LanderHUD : MonoBehaviour
 
     private void UpdateTime()
     {
+        if (GameFlow.CurrentState != GameState.Playing)
+            return;
+
         _time += Time.deltaTime;
         TextTime.text = _time.ToString();
     }

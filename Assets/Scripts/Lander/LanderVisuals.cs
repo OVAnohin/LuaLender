@@ -19,7 +19,7 @@ public class LanderVisuals : MonoBehaviour
         _landerMover.OnUpForce += LanderMoverOnUpForce;
         _landerMover.OnLeftForce += LanderMoverOnLeftForce;
         _landerMover.OnRightForce += LanderMoverOnRightForce;
-        _landerMover.OnBeforeForce += LanderMoverOnBeforeForce;
+        _landerMover.EngineStateChanged += LanderMoverEngineStateChanged;
     }
 
     private void OnDisable()
@@ -27,10 +27,16 @@ public class LanderVisuals : MonoBehaviour
         _landerMover.OnUpForce -= LanderMoverOnUpForce;
         _landerMover.OnLeftForce -= LanderMoverOnLeftForce;
         _landerMover.OnRightForce -= LanderMoverOnRightForce;
-        _landerMover.OnBeforeForce -= LanderMoverOnBeforeForce;
+        _landerMover.EngineStateChanged -= LanderMoverEngineStateChanged;
     }
 
-    private void LanderMoverOnBeforeForce(object sender, EventArgs e)
+    private void LanderMoverEngineStateChanged(bool isEngieActive)
+    {
+        if (isEngieActive == false)
+            LanderMoverEngineOff(null, null);
+    }
+
+    private void LanderMoverEngineOff(object sender, EventArgs e)
     {
         SetEnableThrusterParticleSystem(LeftThrusterParticleSystem, false);
         SetEnableThrusterParticleSystem(MiddleThrusterParticleSystem, false);

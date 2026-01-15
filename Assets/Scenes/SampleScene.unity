@@ -2396,6 +2396,11 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!198 &986194103 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7920034374121356911, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
+  m_PrefabInstance: {fileID: 1783039670}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1023681316
 GameObject:
   m_ObjectHideFlags: 0
@@ -3480,6 +3485,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 491bc9f68306cad40a65002e796205eb, type: 3}
+--- !u!4 &1433238726 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6013482828501684060, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
+  m_PrefabInstance: {fileID: 1783039670}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1561808314
 GameObject:
   m_ObjectHideFlags: 0
@@ -3792,6 +3802,7 @@ Transform:
   - {fileID: 1913335601}
   - {fileID: 1732183725}
   - {fileID: 408504306}
+  - {fileID: 1433238726}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1714081748
@@ -3858,6 +3869,7 @@ MonoBehaviour:
   MinDotVector: 0.9
   FuelConsumptionAmount: 1
   GameFlow: {fileID: 1292146043}
+  SpriteRenderer: {fileID: 974099326}
 --- !u!114 &1714081750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3898,6 +3910,7 @@ MonoBehaviour:
   LeftThrusterParticleSystem: {fileID: 1913335603}
   MiddleThrusterParticleSystem: {fileID: 1732183727}
   RightThrusterParticleSystem: {fileID: 408504308}
+  ExplosionParticleSystem: {fileID: 986194103}
 --- !u!114 &1714081753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3922,6 +3935,67 @@ ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 5626142120532356289, guid: 491bc9f68306cad40a65002e796205eb, type: 3}
   m_PrefabInstance: {fileID: 105016431}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1783039670
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1714081747}
+    m_Modifications:
+    - target: {fileID: 570857052369263401, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
+      propertyPath: m_Name
+      value: ExplosionParticleSystem
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013482828501684060, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013482828501684060, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013482828501684060, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013482828501684060, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013482828501684060, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013482828501684060, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013482828501684060, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013482828501684060, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013482828501684060, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013482828501684060, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7526058640726332929, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6417a7f60d478884997c6c9ac491d28a, type: 3}
 --- !u!1 &1793969989
 GameObject:
   m_ObjectHideFlags: 0

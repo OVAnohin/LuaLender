@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
 public partial class Lander : MonoBehaviour
 {
@@ -10,6 +10,7 @@ public partial class Lander : MonoBehaviour
     [SerializeField] private float MinDotVector = .90f;
     [SerializeField] private float FuelConsumptionAmount = 1f;
     [SerializeField] private GameFlowController GameFlow;
+    [SerializeField] private SpriteRenderer SpriteRenderer;
 
     public float GetForce => Force;
     public float GetTurnSpeed => TurnSpeed;
@@ -17,8 +18,7 @@ public partial class Lander : MonoBehaviour
     public float GetMinDotVector => MinDotVector;
 
     public event EventHandler ScoreChanged;
-    //public event EventHandler Crashed;
-    //public event EventHandler OnLanded;
+    public event EventHandler Crashed;
     public event EventHandler<LandingScoreCalculatedEventArgs> OnLanded;
 
     private int _score = 0;
@@ -132,10 +132,18 @@ public partial class Lander : MonoBehaviour
     private void Crash(int landingScore, float landingAngle, float landingSpeed, LandingType landingType)
     {
         _isAlive = false;
-        LandingScoreCalculatedEventArgs eventArgs = new LandingScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, landingType);
-        OnLanded?.Invoke(this, eventArgs);
-        gameObject.SetActive(false);
         GameFlow.SetState(GameState.Crashed);
+        LandingScoreCalculatedEventArgs eventArgs = new LandingScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, landingType);
+        SpriteRenderer.enabled = false;
+        OnLanded?.Invoke(this, eventArgs);
+        Crashed?.Invoke(this, EventArgs.Empty);
+        StartCoroutine(PauseBeforeSetActiveFalse(.5f));
+    }
+
+    private IEnumerator PauseBeforeSetActiveFalse(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        gameObject.SetActive(false);
     }
 
     private void Land(int landingScore, float landingAngle, float landingSpeed)

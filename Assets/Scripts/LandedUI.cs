@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -42,6 +43,12 @@ public class LandedUI : MonoBehaviour
             0 + "\n" +
             args.Score + "\n";
 
+        StartCoroutine(PauseBeforeShow(.5f));
+    }
+
+    private IEnumerator PauseBeforeShow(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
         Show();
     }
 

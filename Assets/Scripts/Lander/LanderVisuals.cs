@@ -6,16 +6,21 @@ public class LanderVisuals : MonoBehaviour
     [SerializeField] private ParticleSystem LeftThrusterParticleSystem;
     [SerializeField] private ParticleSystem MiddleThrusterParticleSystem;
     [SerializeField] private ParticleSystem RightThrusterParticleSystem;
+    [SerializeField] private ParticleSystem ExplosionParticleSystem;
 
+    private Lander _lander;
     private LanderMover _landerMover;
 
     private void Awake()
     {
+        _lander = GetComponent<Lander>();
         _landerMover = GetComponent<LanderMover>();
+        ExplosionParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
     }
 
     private void OnEnable()
     {
+        _lander.Crashed += LanderCrashed;
         _landerMover.OnUpForce += LanderMoverOnUpForce;
         _landerMover.OnLeftForce += LanderMoverOnLeftForce;
         _landerMover.OnRightForce += LanderMoverOnRightForce;
@@ -24,10 +29,16 @@ public class LanderVisuals : MonoBehaviour
 
     private void OnDisable()
     {
+        _lander.Crashed -= LanderCrashed;
         _landerMover.OnUpForce -= LanderMoverOnUpForce;
         _landerMover.OnLeftForce -= LanderMoverOnLeftForce;
         _landerMover.OnRightForce -= LanderMoverOnRightForce;
         _landerMover.EngineStateChanged -= LanderMoverEngineStateChanged;
+    }
+
+    private void LanderCrashed(object sender, EventArgs e)
+    {
+        ExplosionParticleSystem.Play();
     }
 
     private void LanderMoverEngineStateChanged(bool isEngieActive)

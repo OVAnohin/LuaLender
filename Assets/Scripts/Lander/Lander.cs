@@ -4,58 +4,45 @@ using UnityEngine;
 
 public partial class Lander : MonoBehaviour
 {
-    [SerializeField] private float Force = 700f;
-    [SerializeField] private float TurnSpeed = 100f;
-    [SerializeField] private float SoftLandingVelocity = 3f;
+    [SerializeField] private LanderConfig Config;
     [SerializeField] private float MinDotVector = .90f;
     [SerializeField] private float FuelConsumptionAmount = 1f;
     [SerializeField] private GameFlowController GameFlow;
     [SerializeField] private SpriteRenderer SpriteRenderer;
 
-    public float GetForce => Force;
-    public float GetTurnSpeed => TurnSpeed;
-    public float GetSoftLandingVelocity => SoftLandingVelocity;
-    public float GetMinDotVector => MinDotVector;
-
-    public event EventHandler ScoreChanged;
+    public event EventHandler<ScoreEventArgs> ScoreChanged;
     public event EventHandler Crashed;
-    public event EventHandler<LandingScoreCalculatedEventArgs> OnLanded;
+    public event EventHandler<LandingScoreCalculatedEventArgs> Landed;
 
+    private bool _isInitialized = false;
     private int _score = 0;
-
-    public int Score
-    {
-        get
-        {
-            return _score;
-        }
-        set
-        {
-            if (value > 0)
-            {
-                _score += value;
-                ScoreChanged?.Invoke(this, EventArgs.Empty);
-            }
-        }
-    }
-
 
     private bool _isAlive = true;
     public bool IsAlive => _isAlive;
+    public float SoftLandingVelocity => Config.SoftLandingVelocity;
 
     private LanderFuelTank _fuelTank;
     private LanderMover _landerMover;
+
+    public void Initialize(GameFlowController controller)
+    {
+        if (_isInitialized)
+            return;
+
+        GameFlow = controller;
+        _isInitialized = true;
+
+        GameFlow.SetState(GameState.Ready);
+
+        _landerMover.Initialize(GameFlow);
+
+        ScoreChanged?.Invoke(this, new ScoreEventArgs(_score));
+    }
 
     private void Awake()
     {
         _fuelTank = GetComponent<LanderFuelTank>();
         _landerMover = GetComponent<LanderMover>();
-        GameFlow.SetState(GameState.Ready);
-    }
-
-    private void Start()
-    {
-        ScoreChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnEnable()
@@ -105,7 +92,7 @@ public partial class Lander : MonoBehaviour
 
         int landingScore = LandingPointsCalculation(landingPad, relativeVelocityMagnitude, dotVector);
         _score += landingScore;
-        ScoreChanged?.Invoke(this, EventArgs.Empty);
+        ScoreChanged?.Invoke(this, new ScoreEventArgs(_score));
         Land(landingScore, dotVector, relativeVelocityMagnitude);
     }
 
@@ -135,21 +122,15 @@ public partial class Lander : MonoBehaviour
         GameFlow.SetState(GameState.Crashed);
         LandingScoreCalculatedEventArgs eventArgs = new LandingScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, landingType);
         SpriteRenderer.enabled = false;
-        OnLanded?.Invoke(this, eventArgs);
+        Landed?.Invoke(this, eventArgs);
         Crashed?.Invoke(this, EventArgs.Empty);
-        StartCoroutine(PauseBeforeSetActiveFalse(.5f));
-    }
-
-    private IEnumerator PauseBeforeSetActiveFalse(float waitTime)
-    {
-        yield return new WaitForSeconds(waitTime);
         gameObject.SetActive(false);
     }
 
     private void Land(int landingScore, float landingAngle, float landingSpeed)
     {
         LandingScoreCalculatedEventArgs eventArgs = new LandingScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, LandingType.Success);
-        OnLanded?.Invoke(this, eventArgs);
+        Landed?.Invoke(this, eventArgs);
         GameFlow.SetState(GameState.Landed);
     }
 
@@ -161,6 +142,6 @@ public partial class Lander : MonoBehaviour
     internal void OnCoinPickupContact(CoinPickup coinPickup)
     {
         _score += coinPickup.GetPoints;
-        ScoreChanged?.Invoke(this, EventArgs.Empty);
+        ScoreChanged?.Invoke(this, new ScoreEventArgs(_score));
     }
 }

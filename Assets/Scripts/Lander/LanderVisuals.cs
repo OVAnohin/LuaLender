@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class LanderVisuals : MonoBehaviour
@@ -15,7 +16,7 @@ public class LanderVisuals : MonoBehaviour
     {
         _lander = GetComponent<Lander>();
         _landerMover = GetComponent<LanderMover>();
-        ExplosionParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        LanderMoverEngineOff(null, null);
     }
 
     private void OnEnable()
@@ -38,7 +39,9 @@ public class LanderVisuals : MonoBehaviour
 
     private void LanderCrashed(object sender, EventArgs e)
     {
-        ExplosionParticleSystem.Play();
+        var ps = Instantiate(ExplosionParticleSystem, transform.position, Quaternion.Euler(90f, 0f, 0f));
+        ps.Play();
+        Destroy(ps.gameObject, ps.main.duration);
     }
 
     private void LanderMoverEngineStateChanged(bool isEngieActive)

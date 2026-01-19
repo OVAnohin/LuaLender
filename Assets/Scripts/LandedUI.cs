@@ -2,27 +2,62 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LandedUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI TitleTextMesh;
     [SerializeField] private TextMeshProUGUI StatsTextMesh;
-    [SerializeField] private Lander Lander;
+    [SerializeField] private LevelInitializer LevelInitializer;
     [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private Button nextButton;
+
+    private Lander _lander;
 
     private void Awake()
     {
+        nextButton.onClick.AddListener(OnNextClicked);
         Hide();
+    }
+
+    private void OnNextClicked()
+    {
+        SceneManager.LoadScene(0);
     }
 
     private void OnEnable()
     {
-        Lander.OnLanded += LanderOnLanded;
+        LevelInitializer.LanderSpawned += OnLanderSpawned;
+        LevelInitializer.LanderDestroyed += OnLanderDestroyed;
     }
 
     private void OnDisable()
     {
-        Lander.OnLanded -= LanderOnLanded;
+        LevelInitializer.LanderSpawned -= OnLanderSpawned;
+        LevelInitializer.LanderDestroyed -= OnLanderDestroyed;
+    }
+
+    private void OnLanderSpawned(object sender, LanderArgs lander)
+    {
+        Unsubscribe();
+
+        _lander = lander.Lander;
+        _lander.Landed += LanderOnLanded;
+    }
+
+    private void OnLanderDestroyed(object sender, LanderArgs lander)
+    {
+        if (lander.Lander == _lander)
+            Unsubscribe();
+    }
+
+    private void Unsubscribe()
+    {
+        if (_lander != null)
+            _lander.Landed -= LanderOnLanded;
+
+        _lander = null;
     }
 
     private void LanderOnLanded(object sender, Lander.LandingScoreCalculatedEventArgs args)

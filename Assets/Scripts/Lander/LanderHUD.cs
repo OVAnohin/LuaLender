@@ -1,13 +1,11 @@
 ﻿using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LanderHUD : MonoBehaviour
 {
-    [SerializeField] private Lander Lander;
-    [SerializeField] private LanderFuelTank LanderFuelTank;
-    [SerializeField] private LanderMover LanderMover;
     [SerializeField] private TextMeshProUGUI TextScore;
     [SerializeField] private TextMeshProUGUI TextTime;
     [SerializeField] private GameObject UpArrow;
@@ -16,13 +14,15 @@ public class LanderHUD : MonoBehaviour
     [SerializeField] private GameObject RightArrow;
     [SerializeField] private Image FuelBar;
     [SerializeField] private GameFlowController GameFlow;
+    [SerializeField] private LevelInitializer LevelInitializer;
 
     private float _time;
+    private Lander _lander;
+    private LanderFuelTank _landerFuelTank;
     private Rigidbody2D _landerRigidbody2D;
 
     private void Awake()
     {
-        _landerRigidbody2D = LanderMover.GetComponent<Rigidbody2D>();
         UpArrow.SetActive(false);
         DownArrow.SetActive(false);
         LeftArrow.SetActive(false);
@@ -31,26 +31,58 @@ public class LanderHUD : MonoBehaviour
 
     private void OnEnable()
     {
-        Lander.ScoreChanged += UpdateScore;
-        LanderFuelTank.FuelChanged += UpdateFuel;
+        LevelInitializer.LanderSpawned += OnLanderSpawned;
+        LevelInitializer.LanderDestroyed += OnLanderDestroyed;
+    }
+
+    private void OnLanderSpawned(object sender, LanderArgs lander)
+    {
+        Unsubscribe();
+
+        _lander = lander.Lander;
+
+        LanderMover landerMover = _lander.GetComponent<LanderMover>();
+        _landerRigidbody2D = landerMover.GetComponent<Rigidbody2D>();
+
+        _landerFuelTank = _lander.GetComponent<LanderFuelTank>();
+
+        _lander.ScoreChanged += UpdateScore;
+        _landerFuelTank.FuelChanged += UpdateFuel;
     }
 
     private void OnDisable()
     {
-        Lander.ScoreChanged -= UpdateScore;
-        LanderFuelTank.FuelChanged -= UpdateFuel;
+        LevelInitializer.LanderSpawned -= OnLanderSpawned;
+        LevelInitializer.LanderDestroyed -= OnLanderDestroyed;
     }
 
-    private void Start()
+    private void OnLanderDestroyed(object sender, LanderArgs lander)
     {
-        UpdateScore(Lander, EventArgs.Empty);
-        UpdateFuel(LanderFuelTank, EventArgs.Empty);
+        if (lander.Lander == _lander)
+            Unsubscribe();
     }
 
     private void Update()
     {
+        //Debug.Log(_lander);
+
+        if (_lander == null)
+            return;
+
         UpdateTime();
         UpdateMovementArrows();
+    }
+
+    private void Unsubscribe()
+    {
+        if (_lander != null)
+            _lander.ScoreChanged -= UpdateScore;
+
+        if (_landerFuelTank != null)
+            _landerFuelTank.FuelChanged -= UpdateFuel;
+
+        _lander = null;
+        _landerFuelTank = null;
     }
 
     private void UpdateTime()
@@ -73,13 +105,13 @@ public class LanderHUD : MonoBehaviour
         LeftArrow.SetActive(v.x < -threshold);
     }
 
-    private void UpdateScore(object sender, EventArgs e)
+    private void UpdateScore(object sender, ScoreEventArgs scoreEventArgs)
     {
-        TextScore.text = Lander.Score.ToString();
+        TextScore.text = scoreEventArgs.Score.ToString();
     }
 
     private void UpdateFuel(object sender, EventArgs e)
     {
-        FuelBar.fillAmount = LanderFuelTank.Fuel;
+        FuelBar.fillAmount = _landerFuelTank.Fuel;
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -64,8 +63,6 @@ public class LanderHUD : MonoBehaviour
 
     private void Update()
     {
-        //Debug.Log(_lander);
-
         if (_lander == null)
             return;
 

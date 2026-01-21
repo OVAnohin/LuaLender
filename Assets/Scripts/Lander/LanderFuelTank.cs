@@ -51,7 +51,6 @@ public class LanderFuelTank : MonoBehaviour
         {
             FuelAmount = 0f;
             _hasFuel = false;
-            Debug.Log("Fuel Tank is Empty !!!");
         }
 
         FuelChanged?.Invoke(this, EventArgs.Empty);

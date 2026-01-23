@@ -116,14 +116,14 @@ public class LanderMover : MonoBehaviour
 
         if (_turnInput > 0f)
         {
-            _rigidbody2D.AddTorque(TurnSpeed * _turnInput * Time.fixedDeltaTime);
-            OnLeftForce?.Invoke(this, EventArgs.Empty);
+            _rigidbody2D.AddTorque(TurnSpeed * -_turnInput * Time.fixedDeltaTime);
+            OnRightForce?.Invoke(this, EventArgs.Empty);
             engineActive = true;
         }
         else if (_turnInput < 0f)
         {
-            _rigidbody2D.AddTorque(TurnSpeed * _turnInput * Time.fixedDeltaTime);
-            OnRightForce?.Invoke(this, EventArgs.Empty);
+            _rigidbody2D.AddTorque(TurnSpeed * -_turnInput * Time.fixedDeltaTime);
+            OnLeftForce?.Invoke(this, EventArgs.Empty);
             engineActive = true;
         }
 

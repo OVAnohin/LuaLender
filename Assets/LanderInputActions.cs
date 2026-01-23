@@ -188,7 +188,7 @@ public partial class @LanderInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""Negative"",
+                    ""name"": ""Positive"",
                     ""id"": ""9f08c377-34b9-454e-a54e-1f0086748394"",
                     ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
@@ -199,7 +199,7 @@ public partial class @LanderInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""Positive"",
+                    ""name"": ""Negative"",
                     ""id"": ""efbfc5e2-c476-4b0a-8235-eb31bd69ac98"",
                     ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
@@ -221,7 +221,7 @@ public partial class @LanderInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""Negative"",
+                    ""name"": ""Positive"",
                     ""id"": ""5d12dd09-3293-462e-8083-68761d130c24"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
@@ -232,7 +232,7 @@ public partial class @LanderInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""Positive"",
+                    ""name"": ""Negative"",
                     ""id"": ""78f62af1-2903-4609-836b-df90fc7f667c"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",

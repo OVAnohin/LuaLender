@@ -17,12 +17,14 @@ public class LanderMover : MonoBehaviour
     public float Force => Config.Force;
     public float TurnSpeed => Config.TurnSpeed;
 
-    private InputAction _anyKeyAction;
-
     private Rigidbody2D _rigidbody2D;
     private LanderFuelTank _fuelTank;
     private GameFlowController _gameFlowController;
+    private LanderInputActions _input;
     private bool _isInitialized = false;
+
+    private float _thrustInput;
+    private float _turnInput;
 
     private void Awake()
     {
@@ -30,11 +32,7 @@ public class LanderMover : MonoBehaviour
         _fuelTank = GetComponent<LanderFuelTank>();
         _rigidbody2D.gravityScale = 0f;
 
-        _anyKeyAction = new InputAction(
-            name: "AnyKey",
-            type: InputActionType.Button,
-            binding: "<Keyboard>/anyKey"
-        );
+        _input = new LanderInputActions();
     }
 
     public void Initialize(GameFlowController gameFlowController)
@@ -48,23 +46,55 @@ public class LanderMover : MonoBehaviour
 
     private void OnEnable()
     {
-        _anyKeyAction.Enable();
-        _anyKeyAction.performed += OnAnyKeyPressed;
+        _input.Gameplay.StartGame.performed += OnAnyKeyPressed;
+        _input.Gameplay.Thrust.performed += OnThrust;
+        _input.Gameplay.Thrust.canceled += OnThrustCanceled;
+
+        _input.Gameplay.Turn.performed += OnTurn;
+        _input.Gameplay.Turn.canceled += OnTurnCanceled;
+
+        _input.Gameplay.Enable();
     }
 
     private void OnDisable()
     {
-        _anyKeyAction.performed -= OnAnyKeyPressed;
-        _anyKeyAction.Disable();
+        _input.Gameplay.StartGame.performed -= OnAnyKeyPressed;
+        _input.Gameplay.Thrust.performed -= OnThrust;
+        _input.Gameplay.Thrust.canceled -= OnThrustCanceled;
+
+        _input.Gameplay.Turn.performed -= OnTurn;
+        _input.Gameplay.Turn.canceled -= OnTurnCanceled;
+
+        _input.Gameplay.Disable();
     }
 
     private void OnAnyKeyPressed(InputAction.CallbackContext ctx)
     {
-        if (_gameFlowController.CurrentState == GamePhase.Ready)
-        {
-            _rigidbody2D.gravityScale = GRAVITY_NORMAL;
-            _gameFlowController.SetState(GamePhase.Playing);
-        }
+        if (_gameFlowController.CurrentState != GamePhase.Ready)
+            return;
+
+        _rigidbody2D.gravityScale = GRAVITY_NORMAL;
+        _gameFlowController.SetState(GamePhase.Playing);
+    }
+
+    private void OnThrust(InputAction.CallbackContext ctx)
+    {
+        _thrustInput = ctx.ReadValue<float>();
+    }
+
+    private void OnThrustCanceled(InputAction.CallbackContext ctx)
+    {
+        _thrustInput = 0f;
+    }
+
+    private void OnTurn(InputAction.CallbackContext ctx)
+    {
+        _turnInput = ctx.ReadValue<float>();
+    }
+
+    private void OnTurnCanceled(InputAction.CallbackContext ctx)
+    {
+        _turnInput = 0f;
     }
 
     private void FixedUpdate()
@@ -77,27 +107,27 @@ public class LanderMover : MonoBehaviour
             return;
         }
 
-        if (Keyboard.current.upArrowKey.isPressed)
+        if (_thrustInput > 0f)
         {
-            _rigidbody2D.AddForce(Force * transform.up * Time.deltaTime);
+            _rigidbody2D.AddForce(Force * transform.up * _thrustInput * Time.fixedDeltaTime);
             OnUpForce?.Invoke(this, EventArgs.Empty);
             engineActive = true;
         }
 
-        if (Keyboard.current.leftArrowKey.isPressed)
+        if (_turnInput > 0f)
         {
-            _rigidbody2D.AddTorque(TurnSpeed * Time.deltaTime);
+            _rigidbody2D.AddTorque(TurnSpeed * _turnInput * Time.fixedDeltaTime);
             OnLeftForce?.Invoke(this, EventArgs.Empty);
             engineActive = true;
         }
-
-        if (Keyboard.current.rightArrowKey.isPressed)
+        else if (_turnInput < 0f)
         {
-            _rigidbody2D.AddTorque(-TurnSpeed * Time.deltaTime);
+            _rigidbody2D.AddTorque(TurnSpeed * _turnInput * Time.fixedDeltaTime);
             OnRightForce?.Invoke(this, EventArgs.Empty);
             engineActive = true;
         }
 
         EngineStateChanged?.Invoke(engineActive);
     }
+
 }

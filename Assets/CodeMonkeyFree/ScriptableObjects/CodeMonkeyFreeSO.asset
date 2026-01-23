@@ -14,31 +14,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentVersion: 1.00
   subtype: lunarLanderFree
-  lastShownTimestamp: 1769104847
+  lastShownTimestamp: 1769193697
   lastUpdateResponse:
     version: 1.00
     versionUrl: https://unitycodemonkey.com
-  checkedLastUpdateTimestamp: 1769104847
+  checkedLastUpdateTimestamp: 1769193697
   lastQOTDResponse:
-    questionId: 264
-    questionText: What Types can you natively store with PlayerPrefs?
-    answerA: Anything
-    answerB: string, int, float, bool
-    answerC: string, int, float
+    questionId: 265
+    questionText: What does Normalizing a Vector do?
+    answerA: Modifies its x,y,z to get a magnitude of 1
+    answerB: Invert its x,y,z
+    answerC: Flatten the z
     answerD: 
     answerE: 
-  lastQotdTimestamp: 1769104847
+  lastQotdTimestamp: 1769193697
   lastDynamicHeaderResponse:
     topImageUrl: https://codemonkeyexternal.blob.core.windows.net/external/Misc/gameDevReport_2.png
     topText: Stay up to date with the latest in Game Dev straight to your inbox!
     topLink: gamedevreport
     bottomText: My 10+ Years of C# Knowledge in 1 Course!
     bottomLink: csharpcourse
-  lastDynamicHeaderTimestamp: 1769104847
+  lastDynamicHeaderTimestamp: 1769193697
   websiteLatestMessage:
     text: <a href="https://cmonkey.co/freecourses">Check out all my FREE courses!
       Click here!</a>
-  websiteLatestMessageTimestamp: 1769104847
+  websiteLatestMessageTimestamp: 1769193697
   websiteLatestVideos:
     videos:
     - youTubeId: 4ZcETvXRfl0
@@ -49,4 +49,4 @@ MonoBehaviour:
       title: TOP 10 NEW Games, Made with Unity! (DECEMBER 2025)
     - youTubeId: mJk727yG7qw
       title: Tips from making 2-3-4 Games!
-  websiteLatestVideosTimestamp: 1769104847
+  websiteLatestVideosTimestamp: 1769193697

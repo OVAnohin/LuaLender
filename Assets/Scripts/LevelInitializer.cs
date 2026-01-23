@@ -16,8 +16,8 @@ public class LevelInitializer : MonoBehaviour
     [SerializeField] private GameObject[] fuelPickupPrefabs;
     [SerializeField] private GameObject[] coinPickupPrefabs;
 
-    public event EventHandler<LanderArgs> LanderSpawned;
-    public event EventHandler<LanderArgs> LanderDestroyed;
+    public event EventHandler<LanderEventArgs> LanderSpawned;
+    public event EventHandler<LanderEventArgs> LanderDestroyed;
 
     private Lander _lander;
     private List<Vector2> _spawnPointsLandingPad;
@@ -55,7 +55,7 @@ public class LevelInitializer : MonoBehaviour
 
         _lander.Crashed += OnLanderCrashed;
 
-        LanderSpawned?.Invoke(this, new LanderArgs(_lander));
+        LanderSpawned?.Invoke(this, new LanderEventArgs(_lander));
     }
 
     private void OnLanderCrashed(object sender, EventArgs e)
@@ -63,7 +63,7 @@ public class LevelInitializer : MonoBehaviour
         var lander = (Lander)sender;
         lander.Crashed -= OnLanderCrashed;
 
-        LanderDestroyed?.Invoke(this, new LanderArgs(lander));
+        LanderDestroyed?.Invoke(this, new LanderEventArgs(lander));
     }
 
     private void GenerateLevel()

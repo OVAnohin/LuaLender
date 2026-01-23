@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class LanderArgs : EventArgs
+public class LanderEventArgs : EventArgs
 {
     private Lander _lander;
 
@@ -10,7 +10,7 @@ public class LanderArgs : EventArgs
     }
 
 
-    public LanderArgs(Lander lander)
+    public LanderEventArgs(Lander lander)
     {
         _lander = lander;
     }

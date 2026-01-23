@@ -34,7 +34,7 @@ public class LanderHUD : MonoBehaviour
         LevelInitializer.LanderDestroyed += OnLanderDestroyed;
     }
 
-    private void OnLanderSpawned(object sender, LanderArgs lander)
+    private void OnLanderSpawned(object sender, LanderEventArgs lander)
     {
         Unsubscribe();
 
@@ -56,7 +56,7 @@ public class LanderHUD : MonoBehaviour
         LevelInitializer.LanderDestroyed -= OnLanderDestroyed;
     }
 
-    private void OnLanderDestroyed(object sender, LanderArgs lander)
+    private void OnLanderDestroyed(object sender, LanderEventArgs lander)
     {
         if (lander.Lander == _lander)
             Unsubscribe();

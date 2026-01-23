@@ -47,6 +47,7 @@ public class LanderHUD : MonoBehaviour
 
         _lander.ScoreChanged += UpdateScore;
         _landerFuelTank.FuelChanged += UpdateFuel;
+        UpdateScore(null, EventArgs.Empty);
     }
 
     private void OnDisable()
@@ -84,7 +85,7 @@ public class LanderHUD : MonoBehaviour
 
     private void UpdateTime()
     {
-        if (GameFlow.CurrentState != GameState.Playing)
+        if (GameFlow.CurrentState != GamePhase.Playing)
             return;
 
         _time += Time.deltaTime;
@@ -102,9 +103,10 @@ public class LanderHUD : MonoBehaviour
         LeftArrow.SetActive(v.x < -threshold);
     }
 
-    private void UpdateScore(object sender, ScoreEventArgs scoreEventArgs)
+    private void UpdateScore(object sender, EventArgs e)
     {
-        TextScore.text = scoreEventArgs.Score.ToString();
+        SaveService.Save(new SaveData(_lander.Score));
+        TextScore.text = _lander.Score.ToString();
     }
 
     private void UpdateFuel(object sender, EventArgs e)

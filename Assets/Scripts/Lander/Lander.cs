@@ -9,12 +9,14 @@ public partial class Lander : MonoBehaviour
     [SerializeField] private GameFlowController GameFlow;
     [SerializeField] private SpriteRenderer SpriteRenderer;
 
-    public event EventHandler<ScoreEventArgs> ScoreChanged;
+    public event EventHandler ScoreChanged;
     public event EventHandler Crashed;
-    public event EventHandler<LandingScoreCalculatedEventArgs> Landed;
+    public event EventHandler<ScoreCalculatedEventArgs> Landed;
 
     private bool _isInitialized = false;
+
     private int _score = 0;
+    public int Score => _score;
 
     private bool _isAlive = true;
     public bool IsAlive => _isAlive;
@@ -23,19 +25,18 @@ public partial class Lander : MonoBehaviour
     private LanderFuelTank _fuelTank;
     private LanderMover _landerMover;
 
-    public void Initialize(GameFlowController controller)
+    public void Initialize(GameFlowController controller, int score)
     {
         if (_isInitialized)
             return;
 
         GameFlow = controller;
+        _score = score;
         _isInitialized = true;
 
-        GameFlow.SetState(GameState.Ready);
+        GameFlow.SetState(GamePhase.Ready);
 
         _landerMover.Initialize(GameFlow);
-
-        ScoreChanged?.Invoke(this, new ScoreEventArgs(_score));
     }
 
     private void Awake()
@@ -91,7 +92,7 @@ public partial class Lander : MonoBehaviour
 
         int landingScore = LandingPointsCalculation(landingPad, relativeVelocityMagnitude, dotVector);
         _score += landingScore;
-        ScoreChanged?.Invoke(this, new ScoreEventArgs(_score));
+        ScoreChanged?.Invoke(this, EventArgs.Empty);
         Land(landingScore, dotVector, relativeVelocityMagnitude);
     }
 
@@ -118,8 +119,8 @@ public partial class Lander : MonoBehaviour
     private void Crash(int landingScore, float landingAngle, float landingSpeed, LandingType landingType)
     {
         _isAlive = false;
-        GameFlow.SetState(GameState.Crashed);
-        LandingScoreCalculatedEventArgs eventArgs = new LandingScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, landingType);
+        GameFlow.SetState(GamePhase.Crashed);
+        ScoreCalculatedEventArgs eventArgs = new ScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, landingType);
         SpriteRenderer.enabled = false;
         Landed?.Invoke(this, eventArgs);
         Crashed?.Invoke(this, EventArgs.Empty);
@@ -128,9 +129,9 @@ public partial class Lander : MonoBehaviour
 
     private void Land(int landingScore, float landingAngle, float landingSpeed)
     {
-        LandingScoreCalculatedEventArgs eventArgs = new LandingScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, LandingType.Success);
+        ScoreCalculatedEventArgs eventArgs = new ScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, LandingType.Success);
         Landed?.Invoke(this, eventArgs);
-        GameFlow.SetState(GameState.Landed);
+        GameFlow.SetState(GamePhase.Landed);
     }
 
     internal void OnFuelPickupContact(FuelPickup fuelPickup)
@@ -141,6 +142,6 @@ public partial class Lander : MonoBehaviour
     internal void OnCoinPickupContact(CoinPickup coinPickup)
     {
         _score += coinPickup.GetPoints;
-        ScoreChanged?.Invoke(this, new ScoreEventArgs(_score));
+        ScoreChanged?.Invoke(this, EventArgs.Empty);
     }
 }

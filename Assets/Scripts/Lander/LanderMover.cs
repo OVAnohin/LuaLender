@@ -60,10 +60,10 @@ public class LanderMover : MonoBehaviour
 
     private void OnAnyKeyPressed(InputAction.CallbackContext ctx)
     {
-        if (_gameFlowController.CurrentState == GameState.Ready)
+        if (_gameFlowController.CurrentState == GamePhase.Ready)
         {
             _rigidbody2D.gravityScale = GRAVITY_NORMAL;
-            _gameFlowController.SetState(GameState.Playing);
+            _gameFlowController.SetState(GamePhase.Playing);
         }
     }
 
@@ -71,7 +71,7 @@ public class LanderMover : MonoBehaviour
     {
         bool engineActive = false;
 
-        if (_gameFlowController.CurrentState != GameState.Playing || !_fuelTank.HasFuel)
+        if (_gameFlowController.CurrentState != GamePhase.Playing || !_fuelTank.HasFuel)
         {
             EngineStateChanged?.Invoke(false);
             return;

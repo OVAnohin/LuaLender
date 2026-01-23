@@ -60,7 +60,7 @@ public class LandedUI : MonoBehaviour
         _lander = null;
     }
 
-    private void LanderOnLanded(object sender, Lander.LandingScoreCalculatedEventArgs args)
+    private void LanderOnLanded(object sender, Lander.ScoreCalculatedEventArgs args)
     {
         if (args.LandingType.Equals(Lander.LandingType.Success))
         {

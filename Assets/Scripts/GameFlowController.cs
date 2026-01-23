@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class GameFlowController : MonoBehaviour
 {
-    public GameState CurrentState { get; private set; }
+    public GamePhase CurrentState { get; private set; }
 
-    public event Action<GameState> StateChanged;
+    public event Action<GamePhase> StateChanged;
 
     private void Start()
     {
-        SetState(GameState.Ready);
+        SetState(GamePhase.Ready);
     }
 
-    public void SetState(GameState newState)
+    public void SetState(GamePhase newState)
     {
         if (CurrentState == newState)
             return;

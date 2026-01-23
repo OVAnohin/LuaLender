@@ -1,4 +1,4 @@
-﻿public enum GameState
+﻿public enum GamePhase
 {
     Ready,
     Playing,

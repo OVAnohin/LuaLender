@@ -6,12 +6,12 @@ public partial class Lander : MonoBehaviour
     [SerializeField] private LanderConfig Config;
     [SerializeField] private float MinDotVector = .90f;
     [SerializeField] private float FuelConsumptionAmount = 1f;
-    [SerializeField] private GameFlowController GameFlow;
+    [SerializeField] private LevelStateController GameFlow;
     [SerializeField] private SpriteRenderer SpriteRenderer;
 
     public event EventHandler ScoreChanged;
     public event EventHandler Crashed;
-    public event EventHandler<ScoreCalculatedEventArgs> Landed;
+    public event EventHandler<LanderScoreCalculatedEventArgs> Landed;
 
     private bool _isInitialized = false;
 
@@ -25,7 +25,7 @@ public partial class Lander : MonoBehaviour
     private LanderFuelTank _fuelTank;
     private LanderMover _landerMover;
 
-    public void Initialize(GameFlowController controller, int score)
+    public void Initialize(LevelStateController controller, int score)
     {
         if (_isInitialized)
             return;
@@ -33,8 +33,6 @@ public partial class Lander : MonoBehaviour
         GameFlow = controller;
         _score = score;
         _isInitialized = true;
-
-        GameFlow.SetState(GamePhase.Ready);
 
         _landerMover.Initialize(GameFlow);
     }
@@ -119,8 +117,8 @@ public partial class Lander : MonoBehaviour
     private void Crash(int landingScore, float landingAngle, float landingSpeed, LandingType landingType)
     {
         _isAlive = false;
-        GameFlow.SetState(GamePhase.Crashed);
-        ScoreCalculatedEventArgs eventArgs = new ScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, landingType);
+        GameFlow.SetState(LevelPhase.Crashed);
+        LanderScoreCalculatedEventArgs eventArgs = new LanderScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, landingType);
         SpriteRenderer.enabled = false;
         Landed?.Invoke(this, eventArgs);
         Crashed?.Invoke(this, EventArgs.Empty);
@@ -129,9 +127,9 @@ public partial class Lander : MonoBehaviour
 
     private void Land(int landingScore, float landingAngle, float landingSpeed)
     {
-        ScoreCalculatedEventArgs eventArgs = new ScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, LandingType.Success);
+        LanderScoreCalculatedEventArgs eventArgs = new LanderScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, LandingType.Success);
         Landed?.Invoke(this, eventArgs);
-        GameFlow.SetState(GamePhase.Landed);
+        GameFlow.SetState(LevelPhase.Landed);
     }
 
     internal void OnFuelPickupContact(FuelPickup fuelPickup)

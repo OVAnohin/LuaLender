@@ -23,7 +23,7 @@ public class LandedUI : MonoBehaviour
 
     private void OnNextClicked()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneNames.GameScene.ToString());
     }
 
     private void OnEnable()
@@ -60,7 +60,7 @@ public class LandedUI : MonoBehaviour
         _lander = null;
     }
 
-    private void LanderOnLanded(object sender, Lander.ScoreCalculatedEventArgs args)
+    private void LanderOnLanded(object sender, Lander.LanderScoreCalculatedEventArgs args)
     {
         if (args.LandingType.Equals(Lander.LandingType.Success))
         {

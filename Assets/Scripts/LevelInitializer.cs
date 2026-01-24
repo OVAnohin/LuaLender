@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 public class LevelInitializer : MonoBehaviour
 {
     [SerializeField] private GameObject LanderPrefab;
-    [SerializeField] private GameFlowController GameFlowController;
+    [SerializeField] private LevelStateController GameFlowController;
     [SerializeField] private CinemachineCamera CinemachineCamera;
     [SerializeField] private PlanetSurface PlanetSurface;
 

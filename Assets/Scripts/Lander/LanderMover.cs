@@ -19,7 +19,7 @@ public class LanderMover : MonoBehaviour
 
     private Rigidbody2D _rigidbody2D;
     private LanderFuelTank _fuelTank;
-    private GameFlowController _gameFlowController;
+    private LevelStateController _gameFlowController;
     private LanderInputActions _input;
     private bool _isInitialized = false;
 
@@ -35,7 +35,7 @@ public class LanderMover : MonoBehaviour
         _input = new LanderInputActions();
     }
 
-    public void Initialize(GameFlowController gameFlowController)
+    public void Initialize(LevelStateController gameFlowController)
     {
         if (_isInitialized)
             return;
@@ -50,8 +50,13 @@ public class LanderMover : MonoBehaviour
         _input.Gameplay.Thrust.performed += OnThrust;
         _input.Gameplay.Thrust.canceled += OnThrustCanceled;
 
-        _input.Gameplay.Turn.performed += OnTurn;
-        _input.Gameplay.Turn.canceled += OnTurnCanceled;
+        _input.Gameplay.TurnRight.performed += OnTurnRightPerformed;
+        _input.Gameplay.TurnRight.canceled += OnTurnRightCanceled;
+        _input.Gameplay.TurnLeft.performed += OnTurnLeftPerformed;
+        _input.Gameplay.TurnLeft.canceled += OnTurnLeftCanceled;
+
+        _input.Gameplay.Movement.performed += OnMovementPerformed;
+        _input.Gameplay.Movement.canceled += OnMovementCanceled;
 
         _input.Gameplay.Enable();
     }
@@ -59,22 +64,27 @@ public class LanderMover : MonoBehaviour
     private void OnDisable()
     {
         _input.Gameplay.StartGame.performed -= OnAnyKeyPressed;
-        _input.Gameplay.Thrust.performed -= OnThrust;
+        _input.Gameplay.Thrust. performed -= OnThrust;
         _input.Gameplay.Thrust.canceled -= OnThrustCanceled;
 
-        _input.Gameplay.Turn.performed -= OnTurn;
-        _input.Gameplay.Turn.canceled -= OnTurnCanceled;
+        _input.Gameplay.TurnRight.performed -= OnTurnRightPerformed;
+        _input.Gameplay.TurnRight.canceled -= OnTurnRightCanceled;
+        _input.Gameplay.TurnLeft.performed -= OnTurnLeftPerformed;
+        _input.Gameplay.TurnLeft.canceled -= OnTurnLeftCanceled;
+
+        _input.Gameplay.Movement.performed -= OnMovementPerformed;
+        _input.Gameplay.Movement.canceled -= OnMovementCanceled;
 
         _input.Gameplay.Disable();
     }
 
     private void OnAnyKeyPressed(InputAction.CallbackContext ctx)
     {
-        if (_gameFlowController.CurrentState != GamePhase.Ready)
+        if (_gameFlowController.CurrentState != LevelPhase.Ready)
             return;
 
         _rigidbody2D.gravityScale = GRAVITY_NORMAL;
-        _gameFlowController.SetState(GamePhase.Playing);
+        _gameFlowController.SetState(LevelPhase.Playing);
     }
 
     private void OnThrust(InputAction.CallbackContext ctx)
@@ -87,21 +97,51 @@ public class LanderMover : MonoBehaviour
         _thrustInput = 0f;
     }
 
-    private void OnTurn(InputAction.CallbackContext ctx)
+    private void OnTurnRightPerformed(InputAction.CallbackContext ctx)
     {
-        _turnInput = ctx.ReadValue<float>();
+        _turnInput = 1f;
     }
 
-    private void OnTurnCanceled(InputAction.CallbackContext ctx)
+    private void OnTurnRightCanceled(InputAction.CallbackContext ctx)
     {
         _turnInput = 0f;
+    }
+
+    private void OnTurnLeftPerformed(InputAction.CallbackContext ctx)
+    {
+        _turnInput = -1f;
+    }
+
+    private void OnTurnLeftCanceled(InputAction.CallbackContext ctx)
+    {
+        _turnInput = 0f;
+    }
+
+    private void OnMovementPerformed(InputAction.CallbackContext ctx)
+    {
+        Vector2 value = ctx.ReadValue<Vector2>();
+
+        float gamepadDeadzone = .4f;
+        if (value.x > gamepadDeadzone || value.x < -gamepadDeadzone)
+            _turnInput = value.x;
+
+        if (value.y > gamepadDeadzone)
+            _thrustInput = value.y; 
+    }
+
+    private void OnMovementCanceled(InputAction.CallbackContext ctx)
+    {
+        Vector2 value = ctx.ReadValue<Vector2>();
+
+        _turnInput = value.x;
+        _thrustInput = value.y;
     }
 
     private void FixedUpdate()
     {
         bool engineActive = false;
 
-        if (_gameFlowController.CurrentState != GamePhase.Playing || !_fuelTank.HasFuel)
+        if (_gameFlowController.CurrentState != LevelPhase.Playing || !_fuelTank.HasFuel)
         {
             EngineStateChanged?.Invoke(false);
             return;

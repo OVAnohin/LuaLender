@@ -12,7 +12,7 @@ public class LanderHUD : MonoBehaviour
     [SerializeField] private GameObject LeftArrow;
     [SerializeField] private GameObject RightArrow;
     [SerializeField] private Image FuelBar;
-    [SerializeField] private GameFlowController GameFlow;
+    [SerializeField] private LevelStateController GameFlow;
     [SerializeField] private LevelInitializer LevelInitializer;
 
     private float _time;
@@ -85,7 +85,7 @@ public class LanderHUD : MonoBehaviour
 
     private void UpdateTime()
     {
-        if (GameFlow.CurrentState != GamePhase.Playing)
+        if (GameFlow.CurrentState != LevelPhase.Playing)
             return;
 
         _time += Time.deltaTime;

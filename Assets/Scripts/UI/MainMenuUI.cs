@@ -1,33 +1,27 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuUI : MonoBehaviour
 {
-    [SerializeField] private Button PlayButton;
-    [SerializeField] private Button QuitButton;
-    [SerializeField] private Button ResetScoreButton;
+    [SerializeField] private Button playButton;
+    [SerializeField] private Button profileButton;
+    [SerializeField] private Button settingsButton;
+    [SerializeField] private Button quitButton;
 
-    private void Awake()
+    private MainMenuController _controller;
+
+    public void Initialize(MainMenuController controller)
     {
-        PlayButton.onClick.AddListener(StartGame);
-        QuitButton.onClick.AddListener(QuitGame);
-        ResetScoreButton.onClick.AddListener(ResetScore);
+        _controller = controller;
+
+        playButton.onClick.AddListener(_controller.OnPlayClicked);
+        profileButton.onClick.AddListener(_controller.OnProfileClicked);
+        settingsButton.onClick.AddListener(_controller.OnSettingsClicked);
+        quitButton.onClick.AddListener(_controller.OnQuitClicked);
     }
 
-    private void ResetScore()
+    public void UpdatePlayButtonState(bool isInteractable)
     {
-        int score = 0;
-        SaveService.Save(new SaveData(score));
-    }
-
-    private void StartGame()
-    {
-        SceneManager.LoadScene(SceneNames.GameScene.ToString());
-    }
-
-    private void QuitGame()
-    {
-        Application.Quit();
+        playButton.interactable = isInteractable;
     }
 }

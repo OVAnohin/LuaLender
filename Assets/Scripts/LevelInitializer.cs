@@ -6,10 +6,10 @@ using Random = UnityEngine.Random;
 
 public class LevelInitializer : MonoBehaviour
 {
-    [SerializeField] private GameObject LanderPrefab;
-    [SerializeField] private LevelStateController GameFlowController;
-    [SerializeField] private CinemachineCamera CinemachineCamera;
-    [SerializeField] private PlanetSurface PlanetSurface;
+    [SerializeField] private GameObject landerPrefab;
+    [SerializeField] private LevelStateController levelStateController;
+    [SerializeField] private CinemachineCamera cinemachineCamera;
+    [SerializeField] private PlanetSurface planetSurface;
 
     [Header("Prefabs for level")]
     [SerializeField] private GameObject[] landingPadPrefabs;
@@ -25,19 +25,19 @@ public class LevelInitializer : MonoBehaviour
 
     private void OnEnable()
     {
-        PlanetSurface.PlanetSurfaceRendered += PlanetSurfaceRendered;
+        planetSurface.PlanetSurfaceRendered += PlanetSurfaceRendered;
     }
 
     private void OnDisable()
     {
-        PlanetSurface.PlanetSurfaceRendered -= PlanetSurfaceRendered;
+        planetSurface.PlanetSurfaceRendered -= PlanetSurfaceRendered;
     }
 
     private void Start()
     {
         SpawnLander();
-        CinemachineCamera.Follow = _lander.transform;
-        CinemachineCamera.LookAt = _lander.transform;
+        cinemachineCamera.Follow = _lander.transform;
+        cinemachineCamera.LookAt = _lander.transform;
         GenerateLevel();
     }
 
@@ -49,9 +49,9 @@ public class LevelInitializer : MonoBehaviour
 
     private void SpawnLander()
     {
-        _lander = Instantiate(LanderPrefab, new Vector3(0f, _spawnPointLander.y, 0f), Quaternion.identity).GetComponent<Lander>();
+        _lander = Instantiate(landerPrefab, new Vector3(0f, _spawnPointLander.y, 0f), Quaternion.identity).GetComponent<Lander>();
         SaveData gameSessionData = SaveService.Load();
-        _lander.Initialize(GameFlowController, gameSessionData.Score);
+        _lander.Initialize(levelStateController, gameSessionData.Score);
 
         _lander.Crashed += OnLanderCrashed;
 

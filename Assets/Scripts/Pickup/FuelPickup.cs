@@ -3,9 +3,9 @@
 [RequireComponent(typeof(BoxCollider2D))]
 public class FuelPickup : MonoBehaviour
 {
-    [SerializeField] private float Volume;
+    [SerializeField] private float volume;
 
-    public float GetVolume => Volume;
+    public float GetVolume => volume;
 
     private void OnTriggerEnter2D(Collider2D collider2D)
     {

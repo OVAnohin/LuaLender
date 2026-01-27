@@ -2,7 +2,7 @@
 
 public class LandingPad : MonoBehaviour
 {
-    [SerializeField] private int ScoreMultipler;
+    [SerializeField] private int scoreMultipler;
 
-    public int GetScore => ScoreMultipler;
+    public int GetScore => scoreMultipler;
 }

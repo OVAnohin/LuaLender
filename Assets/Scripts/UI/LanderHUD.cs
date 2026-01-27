@@ -5,15 +5,15 @@ using UnityEngine.UI;
 
 public class LanderHUD : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI TextScore;
-    [SerializeField] private TextMeshProUGUI TextTime;
-    [SerializeField] private GameObject UpArrow;
-    [SerializeField] private GameObject DownArrow;
-    [SerializeField] private GameObject LeftArrow;
-    [SerializeField] private GameObject RightArrow;
-    [SerializeField] private Image FuelBar;
-    [SerializeField] private LevelStateController GameFlow;
-    [SerializeField] private LevelInitializer LevelInitializer;
+    [SerializeField] private TextMeshProUGUI textScore;
+    [SerializeField] private TextMeshProUGUI textTime;
+    [SerializeField] private GameObject upArrow;
+    [SerializeField] private GameObject downArrow;
+    [SerializeField] private GameObject leftArrow;
+    [SerializeField] private GameObject rightArrow;
+    [SerializeField] private Image fuelBar;
+    [SerializeField] private LevelStateController levelStateController;
+    [SerializeField] private LevelInitializer levelInitializer;
 
     private float _time;
     private Lander _lander;
@@ -22,16 +22,16 @@ public class LanderHUD : MonoBehaviour
 
     private void Awake()
     {
-        UpArrow.SetActive(false);
-        DownArrow.SetActive(false);
-        LeftArrow.SetActive(false);
-        RightArrow.SetActive(false);
+        upArrow.SetActive(false);
+        downArrow.SetActive(false);
+        leftArrow.SetActive(false);
+        rightArrow.SetActive(false);
     }
 
     private void OnEnable()
     {
-        LevelInitializer.LanderSpawned += OnLanderSpawned;
-        LevelInitializer.LanderDestroyed += OnLanderDestroyed;
+        levelInitializer.LanderSpawned += OnLanderSpawned;
+        levelInitializer.LanderDestroyed += OnLanderDestroyed;
     }
 
     private void OnLanderSpawned(object sender, LanderEventArgs lander)
@@ -52,8 +52,8 @@ public class LanderHUD : MonoBehaviour
 
     private void OnDisable()
     {
-        LevelInitializer.LanderSpawned -= OnLanderSpawned;
-        LevelInitializer.LanderDestroyed -= OnLanderDestroyed;
+        levelInitializer.LanderSpawned -= OnLanderSpawned;
+        levelInitializer.LanderDestroyed -= OnLanderDestroyed;
     }
 
     private void OnLanderDestroyed(object sender, LanderEventArgs lander)
@@ -85,11 +85,11 @@ public class LanderHUD : MonoBehaviour
 
     private void UpdateTime()
     {
-        if (GameFlow.CurrentState != LevelPhase.Playing)
+        if (levelStateController.CurrentPhase != LevelPhase.Playing)
             return;
 
         _time += Time.deltaTime;
-        TextTime.text = _time.ToString();
+        textTime.text = _time.ToString();
     }
 
     private void UpdateMovementArrows()
@@ -97,20 +97,20 @@ public class LanderHUD : MonoBehaviour
         Vector2 v = _landerRigidbody2D.linearVelocity;
         const float threshold = 0.1f;
 
-        UpArrow.SetActive(v.y > threshold);
-        DownArrow.SetActive(v.y < -threshold);
-        RightArrow.SetActive(v.x > threshold);
-        LeftArrow.SetActive(v.x < -threshold);
+        upArrow.SetActive(v.y > threshold);
+        downArrow.SetActive(v.y < -threshold);
+        rightArrow.SetActive(v.x > threshold);
+        leftArrow.SetActive(v.x < -threshold);
     }
 
     private void UpdateScore(object sender, EventArgs e)
     {
         SaveService.Save(new SaveData(_lander.Score));
-        TextScore.text = _lander.Score.ToString();
+        textScore.text = _lander.Score.ToString();
     }
 
     private void UpdateFuel(object sender, EventArgs e)
     {
-        FuelBar.fillAmount = _landerFuelTank.Fuel;
+        fuelBar.fillAmount = _landerFuelTank.Fuel;
     }
 }

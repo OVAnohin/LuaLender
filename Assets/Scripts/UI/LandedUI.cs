@@ -7,9 +7,9 @@ using UnityEngine.UI;
 
 public class LandedUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI TitleTextMesh;
-    [SerializeField] private TextMeshProUGUI StatsTextMesh;
-    [SerializeField] private LevelInitializer LevelInitializer;
+    [SerializeField] private TextMeshProUGUI titleTextMesh;
+    [SerializeField] private TextMeshProUGUI statsTextMesh;
+    [SerializeField] private LevelInitializer levelInitializer;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private Button nextButton;
 
@@ -28,14 +28,14 @@ public class LandedUI : MonoBehaviour
 
     private void OnEnable()
     {
-        LevelInitializer.LanderSpawned += OnLanderSpawned;
-        LevelInitializer.LanderDestroyed += OnLanderDestroyed;
+        levelInitializer.LanderSpawned += OnLanderSpawned;
+        levelInitializer.LanderDestroyed += OnLanderDestroyed;
     }
 
     private void OnDisable()
     {
-        LevelInitializer.LanderSpawned -= OnLanderSpawned;
-        LevelInitializer.LanderDestroyed -= OnLanderDestroyed;
+        levelInitializer.LanderSpawned -= OnLanderSpawned;
+        levelInitializer.LanderDestroyed -= OnLanderDestroyed;
     }
 
     private void OnLanderSpawned(object sender, LanderEventArgs lander)
@@ -64,15 +64,15 @@ public class LandedUI : MonoBehaviour
     {
         if (args.LandingType.Equals(Lander.LandingType.Success))
         {
-            TitleTextMesh.text = "Successful Landing!";
+            titleTextMesh.text = "Successful Landing!";
         }
         else
         {
-            TitleTextMesh.color = Color.red;
-            TitleTextMesh.text = args.LandingType.ToString();
+            titleTextMesh.color = Color.red;
+            titleTextMesh.text = args.LandingType.ToString();
         }
 
-        StatsTextMesh.text =
+        statsTextMesh.text =
             args.LandingSpeed + "\n" +
             args.LandingAngle + "\n" +
             0 + "\n" +

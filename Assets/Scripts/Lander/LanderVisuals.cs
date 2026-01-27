@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class LanderVisuals : MonoBehaviour
 {
-    [SerializeField] private ParticleSystem LeftThrusterParticleSystem;
-    [SerializeField] private ParticleSystem MiddleThrusterParticleSystem;
-    [SerializeField] private ParticleSystem RightThrusterParticleSystem;
-    [SerializeField] private ParticleSystem ExplosionParticleSystem;
+    [SerializeField] private ParticleSystem leftThrusterParticleSystem;
+    [SerializeField] private ParticleSystem middleThrusterParticleSystem;
+    [SerializeField] private ParticleSystem rightThrusterParticleSystem;
+    [SerializeField] private ParticleSystem explosionParticleSystem;
 
     private Lander _lander;
     private LanderMover _landerMover;
@@ -39,7 +39,7 @@ public class LanderVisuals : MonoBehaviour
 
     private void LanderCrashed(object sender, EventArgs e)
     {
-        var ps = Instantiate(ExplosionParticleSystem, transform.position, Quaternion.Euler(90f, 0f, 0f));
+        var ps = Instantiate(explosionParticleSystem, transform.position, Quaternion.Euler(90f, 0f, 0f));
         ps.Play();
         Destroy(ps.gameObject, ps.main.duration);
     }
@@ -52,26 +52,26 @@ public class LanderVisuals : MonoBehaviour
 
     private void LanderMoverEngineOff(object sender, EventArgs e)
     {
-        SetEnableThrusterParticleSystem(LeftThrusterParticleSystem, false);
-        SetEnableThrusterParticleSystem(MiddleThrusterParticleSystem, false);
-        SetEnableThrusterParticleSystem(RightThrusterParticleSystem, false);
+        SetEnableThrusterParticleSystem(leftThrusterParticleSystem, false);
+        SetEnableThrusterParticleSystem(middleThrusterParticleSystem, false);
+        SetEnableThrusterParticleSystem(rightThrusterParticleSystem, false);
     }
 
     private void LanderMoverOnRightForce(object sender, EventArgs e)
     {
-        SetEnableThrusterParticleSystem(LeftThrusterParticleSystem, true);
+        SetEnableThrusterParticleSystem(leftThrusterParticleSystem, true);
     }
 
     private void LanderMoverOnLeftForce(object sender, EventArgs e)
     {
-        SetEnableThrusterParticleSystem(RightThrusterParticleSystem, true);
+        SetEnableThrusterParticleSystem(rightThrusterParticleSystem, true);
     }
 
     private void LanderMoverOnUpForce(object sender, System.EventArgs e)
     {
-        SetEnableThrusterParticleSystem(LeftThrusterParticleSystem, true);
-        SetEnableThrusterParticleSystem(MiddleThrusterParticleSystem, true);
-        SetEnableThrusterParticleSystem(RightThrusterParticleSystem, true);
+        SetEnableThrusterParticleSystem(leftThrusterParticleSystem, true);
+        SetEnableThrusterParticleSystem(middleThrusterParticleSystem, true);
+        SetEnableThrusterParticleSystem(rightThrusterParticleSystem, true);
     }
 
     private void SetEnableThrusterParticleSystem(ParticleSystem particleSystem, bool isEnabled)

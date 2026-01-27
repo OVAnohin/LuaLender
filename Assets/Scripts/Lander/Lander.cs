@@ -3,11 +3,11 @@ using UnityEngine;
 
 public partial class Lander : MonoBehaviour
 {
-    [SerializeField] private LanderConfig Config;
-    [SerializeField] private float MinDotVector = .90f;
-    [SerializeField] private float FuelConsumptionAmount = 1f;
-    [SerializeField] private LevelStateController GameFlow;
-    [SerializeField] private SpriteRenderer SpriteRenderer;
+    [SerializeField] private LanderConfig config;
+    [SerializeField] private float minDotVector = .90f;
+    [SerializeField] private float fuelConsumptionAmount = 1f;
+    [SerializeField] private LevelStateController gameFlow;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     public event EventHandler ScoreChanged;
     public event EventHandler Crashed;
@@ -20,7 +20,7 @@ public partial class Lander : MonoBehaviour
 
     private bool _isAlive = true;
     public bool IsAlive => _isAlive;
-    public float SoftLandingVelocity => Config.SoftLandingVelocity;
+    public float SoftLandingVelocity => config.SoftLandingVelocity;
 
     private LanderFuelTank _fuelTank;
     private LanderMover _landerMover;
@@ -30,11 +30,11 @@ public partial class Lander : MonoBehaviour
         if (_isInitialized)
             return;
 
-        GameFlow = controller;
+        gameFlow = controller;
         _score = score;
         _isInitialized = true;
 
-        _landerMover.Initialize(GameFlow);
+        _landerMover.Initialize(gameFlow);
     }
 
     private void Awake()
@@ -60,13 +60,13 @@ public partial class Lander : MonoBehaviour
     private void LanderMoverOnOneEngineForce(object sender, EventArgs e)
     {
         int engineCount = 1;
-        _fuelTank.Consume(engineCount, FuelConsumptionAmount);
+        _fuelTank.Consume(engineCount, fuelConsumptionAmount);
     }
 
     private void LanderMoverOnAllEngineForce(object sender, EventArgs e)
     {
         int engineCount = 3;
-        _fuelTank.Consume(engineCount, FuelConsumptionAmount);
+        _fuelTank.Consume(engineCount, fuelConsumptionAmount);
     }
 
     internal void OnLandingPadContact(LandingPad landingPad, Collision2D collision2D)
@@ -82,7 +82,7 @@ public partial class Lander : MonoBehaviour
         }
 
         float dotVector = Vector2.Dot(Vector2.up, transform.up);
-        if (dotVector < MinDotVector)
+        if (dotVector < minDotVector)
         {
             Crash(0, dotVector, relativeVelocityMagnitude, LandingType.TooStepAngle);
             return;
@@ -117,9 +117,9 @@ public partial class Lander : MonoBehaviour
     private void Crash(int landingScore, float landingAngle, float landingSpeed, LandingType landingType)
     {
         _isAlive = false;
-        GameFlow.SetState(LevelPhase.Crashed);
+        gameFlow.SetPhase(LevelPhase.Crashed);
         LanderScoreCalculatedEventArgs eventArgs = new LanderScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, landingType);
-        SpriteRenderer.enabled = false;
+        spriteRenderer.enabled = false;
         Landed?.Invoke(this, eventArgs);
         Crashed?.Invoke(this, EventArgs.Empty);
         gameObject.SetActive(false);
@@ -129,7 +129,7 @@ public partial class Lander : MonoBehaviour
     {
         LanderScoreCalculatedEventArgs eventArgs = new LanderScoreCalculatedEventArgs(landingScore, landingAngle, landingSpeed, LandingType.Success);
         Landed?.Invoke(this, eventArgs);
-        GameFlow.SetState(LevelPhase.Landed);
+        gameFlow.SetPhase(LevelPhase.Landed);
     }
 
     internal void OnFuelPickupContact(FuelPickup fuelPickup)

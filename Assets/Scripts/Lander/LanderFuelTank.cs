@@ -4,8 +4,8 @@ using UnityEngine;
 public class LanderFuelTank : MonoBehaviour
 {
     [Header("Fuel")]
-    [SerializeField] private float FuelAmount = 20f;
-    [SerializeField] private float FuelAmountMax = 20f;
+    [SerializeField] private float fuelAmount = 20f;
+    [SerializeField] private float fuelAmountMax = 20f;
 
     private bool _hasFuel = true;
     public bool HasFuel => _hasFuel;
@@ -15,12 +15,12 @@ public class LanderFuelTank : MonoBehaviour
         set
         {
             if (value > 0)
-                FuelAmount += value;
+                fuelAmount += value;
 
-            if (FuelAmount > FuelAmountMax)
-                FuelAmount = FuelAmountMax;
+            if (fuelAmount > fuelAmountMax)
+                fuelAmount = fuelAmountMax;
 
-            if (FuelAmount > 0)
+            if (fuelAmount > 0)
                 _hasFuel = true;
         }
     }
@@ -29,7 +29,7 @@ public class LanderFuelTank : MonoBehaviour
     {
         get
         {
-            return FuelAmount / FuelAmountMax;
+            return fuelAmount / fuelAmountMax;
         }
     }
 
@@ -45,11 +45,11 @@ public class LanderFuelTank : MonoBehaviour
         if (!_hasFuel)
             return;
 
-        FuelAmount -= fuelConsumptionAmount * Time.fixedDeltaTime * flowRateCoefficient;
+        fuelAmount -= fuelConsumptionAmount * Time.fixedDeltaTime * flowRateCoefficient;
 
-        if (FuelAmount <= 0f)
+        if (fuelAmount <= 0f)
         {
-            FuelAmount = 0f;
+            fuelAmount = 0f;
             _hasFuel = false;
         }
 

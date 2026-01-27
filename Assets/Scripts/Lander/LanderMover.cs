@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 public class LanderMover : MonoBehaviour
 {
-    [SerializeField] private LanderConfig Config;
+    [SerializeField] private LanderConfig config;
 
     private const float GRAVITY_NORMAL = 0.7f;
 
@@ -14,8 +14,8 @@ public class LanderMover : MonoBehaviour
     public event EventHandler OnLeftForce;
     public event Action<bool> EngineStateChanged;
 
-    public float Force => Config.Force;
-    public float TurnSpeed => Config.TurnSpeed;
+    public float Force => config.Force;
+    public float TurnSpeed => config.TurnSpeed;
 
     private Rigidbody2D _rigidbody2D;
     private LanderFuelTank _fuelTank;
@@ -80,11 +80,11 @@ public class LanderMover : MonoBehaviour
 
     private void OnAnyKeyPressed(InputAction.CallbackContext ctx)
     {
-        if (_gameFlowController.CurrentState != LevelPhase.Ready)
+        if (_gameFlowController.CurrentPhase != LevelPhase.Ready)
             return;
 
         _rigidbody2D.gravityScale = GRAVITY_NORMAL;
-        _gameFlowController.SetState(LevelPhase.Playing);
+        _gameFlowController.SetPhase(LevelPhase.Playing);
     }
 
     private void OnThrust(InputAction.CallbackContext ctx)
@@ -141,7 +141,7 @@ public class LanderMover : MonoBehaviour
     {
         bool engineActive = false;
 
-        if (_gameFlowController.CurrentState != LevelPhase.Playing || !_fuelTank.HasFuel)
+        if (_gameFlowController.CurrentPhase != LevelPhase.Playing || !_fuelTank.HasFuel)
         {
             EngineStateChanged?.Invoke(false);
             return;

@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class AppFlowController : MonoBehaviour
 {
-    public static AppFlowController Instance => AppBootstrap.AppFlow;
+    public static AppFlowController Instance => AppBootstrap.Instance.AppFlow;
 
     public AppState CurrentState { get; private set; }
     public event Action<AppState> StateChanged;

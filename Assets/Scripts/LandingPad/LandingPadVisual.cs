@@ -4,11 +4,11 @@ using UnityEngine;
 [RequireComponent(typeof(LandingPad))]
 public class LandingPadVisual : MonoBehaviour
 {
-    [SerializeField] private TextMeshPro TextMeshPro;
+    [SerializeField] private TextMeshPro textMeshPro;
 
     private void Awake()
     {
         LandingPad landingPad = GetComponent<LandingPad>();
-        TextMeshPro.text = $"x {landingPad.GetScore}";
+        textMeshPro.text = $"x {landingPad.GetScore}";
     }
 }

@@ -3,21 +3,21 @@ using UnityEngine;
 
 public class LevelStateController : MonoBehaviour
 {
-    public LevelPhase CurrentState { get; private set; }
+    public LevelPhase CurrentPhase { get; private set; }
 
-    public event Action<LevelPhase> StateChanged;
+    public event Action<LevelPhase> PhaseChanged;
 
     private void Start()
     {
-        SetState(LevelPhase.Ready);
+        SetPhase(LevelPhase.Ready);
     }
 
-    public void SetState(LevelPhase newState)
+    public void SetPhase(LevelPhase newState)
     {
-        if (CurrentState == newState)
+        if (CurrentPhase == newState)
             return;
 
-        CurrentState = newState;
-        StateChanged?.Invoke(CurrentState);
+        CurrentPhase = newState;
+        PhaseChanged?.Invoke(CurrentPhase);
     }
 }

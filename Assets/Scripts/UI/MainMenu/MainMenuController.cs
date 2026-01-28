@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MainMenuController : MonoBehaviour
 {
     [SerializeField] private MainMenuUI mainMenuUI;
-    [SerializeField] private ProfileMenuUI profileMenuUI;
+
+    public event EventHandler ProfileMenuClicked;
+    //public event EventHandler SettingsMenuClicked;
 
     private ProfileService _profileService;
     private AppFlowController _appFlow;
@@ -15,7 +18,6 @@ public class MainMenuController : MonoBehaviour
         _appFlow = AppBootstrap.Instance.AppFlow;
 
         mainMenuUI.Initialize(this);
-        profileMenuUI.Initialize(_profileService);
     }
 
     private void OnEnable()
@@ -42,9 +44,7 @@ public class MainMenuController : MonoBehaviour
 
     public void OnProfileClicked()
     {
-        // открыть UI выбора профиля
-        Debug.Log("Open Profile Menu");
-        profileMenuUI.Show();
+        ProfileMenuClicked?.Invoke(this, EventArgs.Empty);
     }
 
     public void OnSettingsClicked()

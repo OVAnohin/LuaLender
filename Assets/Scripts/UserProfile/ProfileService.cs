@@ -13,18 +13,38 @@ public class ProfileService
     public event Action ProfilesLoaded;
 
     private readonly List<UserProfile> _profiles = new List<UserProfile>();
+    private string ProfilesFilePath => System.IO.Path.Combine(Application.persistentDataPath, "profiles.json");
 
     public void LoadProfiles()
     {
-        // Здесь можно загрузку из PlayerPrefs, JSON, файл и т.д.
-        // Сейчас заглушка: имитация пустого хранилища
         _profiles.Clear();
+        ActiveProfile = null;
 
-        // Вызываем событие о загрузке
+        if (!System.IO.File.Exists(ProfilesFilePath))
+        {
+            ProfilesLoaded?.Invoke();
+            ProfilesListChanged?.Invoke(AllProfiles);
+            return;
+        }
+
+        string json = System.IO.File.ReadAllText(ProfilesFilePath);
+        var data = JsonUtility.FromJson<UserProfilesData>(json);
+
+        if (data == null)
+        {
+            ProfilesLoaded?.Invoke();
+            ProfilesListChanged?.Invoke(AllProfiles);
+            return;
+        }
+
+        _profiles.AddRange(data.Profiles);
+
+        if (!string.IsNullOrEmpty(data.ActiveProfileId))
+            ActiveProfile = _profiles.FirstOrDefault(p => p.ProfileId == data.ActiveProfileId);
+
         ProfilesLoaded?.Invoke();
-
-        // Обновляем UI/контроллер
         ProfilesListChanged?.Invoke(AllProfiles);
+        ActiveProfileChanged?.Invoke(ActiveProfile);
     }
 
     public UserProfile CreateProfile(string playerName, string avatarId = null)
@@ -32,12 +52,24 @@ public class ProfileService
         var profile = new UserProfile(playerName, avatarId);
         _profiles.Add(profile);
 
-        // Если это первый профиль, делаем его активным
         if (ActiveProfile == null)
             SetActiveProfile(profile.ProfileId);
 
+        SaveProfiles();
         ProfilesListChanged?.Invoke(AllProfiles);
         return profile;
+    }
+
+    public void SaveProfiles()
+    {
+        var data = new UserProfilesData
+        {
+            Profiles = _profiles,
+            ActiveProfileId = ActiveProfile?.ProfileId
+        };
+
+        string json = JsonUtility.ToJson(data, true);
+        System.IO.File.WriteAllText(ProfilesFilePath, json);
     }
 
     public void DeleteProfile(string profileId)
@@ -47,14 +79,12 @@ public class ProfileService
 
         _profiles.Remove(profile);
 
-        // Если удалили активный профиль, активный становится null
         if (ActiveProfile == profile)
-        {
             ActiveProfile = _profiles.FirstOrDefault();
-            ActiveProfileChanged?.Invoke(ActiveProfile);
-        }
 
+        SaveProfiles();
         ProfilesListChanged?.Invoke(AllProfiles);
+        ActiveProfileChanged?.Invoke(ActiveProfile);
     }
 
     public void SetActiveProfile(string profileId)
@@ -64,11 +94,5 @@ public class ProfileService
 
         ActiveProfile = profile;
         ActiveProfileChanged?.Invoke(ActiveProfile);
-    }
-
-    public void SaveProfiles()
-    {
-        // TODO: сериализация и запись в PlayerPrefs / JSON / файл
-        Debug.Log("Profiles saved. Count: " + _profiles.Count);
     }
 }

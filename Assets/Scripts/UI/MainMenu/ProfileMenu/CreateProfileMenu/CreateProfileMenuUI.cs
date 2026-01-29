@@ -10,15 +10,23 @@ public class CreateProfileMenuUI : MonoBehaviour
     [SerializeField] private Button closeButton;
     [SerializeField] private CanvasGroup canvasGroup;
 
+    public string PlayerName => nameInput.text;
+
     private CreateProfileMenuController _createProfileMenuController;
 
     internal void Initialize(CreateProfileMenuController createProfileMenuController)
     {
         _createProfileMenuController = createProfileMenuController;
-        okButton.onClick.AddListener(_createProfileMenuController.OnOkClicked);
+
+        okButton.onClick.AddListener(OnOkClicked);
         closeButton.onClick.AddListener(_createProfileMenuController.OnCloseCreateProfileMenuClicked);
 
         Subscribe();
+    }
+
+    private void OnOkClicked()
+    {
+        _createProfileMenuController.OnOkClicked(nameInput.text);
     }
 
     private void Subscribe()
@@ -53,16 +61,5 @@ public class CreateProfileMenuUI : MonoBehaviour
         canvasGroup.alpha = 0f;
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
-    }
-
-    private void OnCreateClicked()
-    {
-        string playerName = nameInput.text;
-        //_controller.OnCreateProfileClicked(playerName);
-    }
-
-    public void ClearInput()
-    {
-        nameInput.text = string.Empty;
     }
 }

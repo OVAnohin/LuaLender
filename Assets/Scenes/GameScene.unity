@@ -2422,9 +2422,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfb645987d2cd2b4a8f8aa77de85799f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LandedUI
-  TitleTextMesh: {fileID: 362012045}
-  StatsTextMesh: {fileID: 868115096}
-  LevelInitializer: {fileID: 1279561587}
+  titleTextMesh: {fileID: 362012045}
+  statsTextMesh: {fileID: 868115096}
+  levelInitializer: {fileID: 1279561587}
   canvasGroup: {fileID: 901152031}
   nextButton: {fileID: 1492728250}
 --- !u!225 &901152031
@@ -2710,10 +2710,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1fe29b5b1ee04d4a85e153b01a36ed5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelInitializer
-  LanderPrefab: {fileID: 8959518842102722762, guid: e98159a1909e4bc4eb3afc085f44873c, type: 3}
-  GameFlowController: {fileID: 1292146043}
-  CinemachineCamera: {fileID: 310860590}
-  PlanetSurface: {fileID: 612454004}
+  landerPrefab: {fileID: 8959518842102722762, guid: e98159a1909e4bc4eb3afc085f44873c, type: 3}
+  levelStateController: {fileID: 1292146045}
+  cinemachineCamera: {fileID: 310860590}
+  planetSurface: {fileID: 612454004}
   landingPadPrefabs:
   - {fileID: 1714909658604891810, guid: 59d33fadc9b28a6408152a28e5a9b635, type: 3}
   - {fileID: 2797037032061199741, guid: cc8e79046ff4bab43b79299a69b9a15f, type: 3}
@@ -2730,26 +2730,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1292146044}
-  - component: {fileID: 1292146043}
+  - component: {fileID: 1292146045}
   m_Layer: 0
-  m_Name: GameFlowController
+  m_Name: LevelStateController
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1292146043
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1292146042}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d533d8f88aaab06498e6c22f7ef6e77d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameFlowController
 --- !u!4 &1292146044
 Transform:
   m_ObjectHideFlags: 0
@@ -2765,6 +2753,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1292146045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292146042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10e32ec1554c94c44818b089b394706a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelStateController
 --- !u!1 &1322006596
 GameObject:
   m_ObjectHideFlags: 0
@@ -3262,15 +3262,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ec871c35a880754eb33d63fddc34300, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LanderHUD
-  TextScore: {fileID: 440838855}
-  TextTime: {fileID: 1944730238}
-  UpArrow: {fileID: 1592211737}
-  DownArrow: {fileID: 315333375}
-  LeftArrow: {fileID: 1894136596}
-  RightArrow: {fileID: 1211711425}
-  FuelBar: {fileID: 1793969991}
-  GameFlow: {fileID: 1292146043}
-  LevelInitializer: {fileID: 1279561587}
+  textScore: {fileID: 440838855}
+  textTime: {fileID: 1944730238}
+  upArrow: {fileID: 1592211737}
+  downArrow: {fileID: 315333375}
+  leftArrow: {fileID: 1894136596}
+  rightArrow: {fileID: 1211711425}
+  fuelBar: {fileID: 1793969991}
+  levelStateController: {fileID: 1292146045}
+  levelInitializer: {fileID: 1279561587}
 --- !u!1 &1592211737
 GameObject:
   m_ObjectHideFlags: 0

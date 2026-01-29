@@ -219,11 +219,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d5b809ccc8d2af42a0b04cfc57e87a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Lander
-  Config: {fileID: 11400000, guid: a964b789b08e0564c82f1526845361ac, type: 2}
-  MinDotVector: 0.9
-  FuelConsumptionAmount: 1
-  GameFlow: {fileID: 0}
-  SpriteRenderer: {fileID: 3561766372888473962}
+  config: {fileID: 11400000, guid: a964b789b08e0564c82f1526845361ac, type: 2}
+  minDotVector: 0.9
+  fuelConsumptionAmount: 1
+  gameFlow: {fileID: 0}
+  spriteRenderer: {fileID: 3561766372888473962}
 --- !u!114 &1511750123427358969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,8 +236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2203841cf509c3c4a969b94f38592568, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LanderMover
-  GameFlow: {fileID: 0}
-  Config: {fileID: 11400000, guid: a964b789b08e0564c82f1526845361ac, type: 2}
+  config: {fileID: 11400000, guid: a964b789b08e0564c82f1526845361ac, type: 2}
 --- !u!114 &2588264894561138142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,10 +249,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c6ec7c3de907594890a67e7ba0f2674, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LanderVisuals
-  LeftThrusterParticleSystem: {fileID: 7744909613304026936}
-  MiddleThrusterParticleSystem: {fileID: 1325656695568786124}
-  RightThrusterParticleSystem: {fileID: 1687664925744237785}
-  ExplosionParticleSystem: {fileID: 7266951939111259494}
+  leftThrusterParticleSystem: {fileID: 7744909613304026936}
+  middleThrusterParticleSystem: {fileID: 1325656695568786124}
+  rightThrusterParticleSystem: {fileID: 1687664925744237785}
+  explosionParticleSystem: {fileID: 7266951939111259494}
 --- !u!114 &1896931858164596586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,8 +277,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d822ed91e84895d47bc6f77b812375a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FuelTank
-  FuelAmount: 30
-  FuelAmountMax: 30
+  fuelAmount: 20
+  fuelAmountMax: 20
 --- !u!1001 &662305141783982857
 PrefabInstance:
   m_ObjectHideFlags: 0

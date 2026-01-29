@@ -366,7 +366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92f4a6e09bc9f1d4cb3f4c4aecd92c3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LandingPad
-  ScoreMultipler: 3
+  scoreMultipler: 3
 --- !u!114 &2316035735801992156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,4 +379,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36deff59b9395f2478543d1ef14484b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LandingPadVisual
-  TextMeshPro: {fileID: 170445153279127974}
+  textMeshPro: {fileID: 170445153279127974}

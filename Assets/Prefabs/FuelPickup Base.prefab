@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38051d30a96787f47a559bc85a1cdb5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FuelPickup
-  Volume: 15
+  volume: 20
 --- !u!1 &6422264217587777171
 GameObject:
   m_ObjectHideFlags: 0

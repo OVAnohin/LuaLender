@@ -34,9 +34,17 @@ public class CreateProfileMenuController : MonoBehaviour
         HideWindow?.Invoke(this, EventArgs.Empty);
     }
 
-    internal void OnOkClicked()
+    internal void OnOkClicked(string text)
     {
-        throw new NotImplementedException();
+        if (!System.String.IsNullOrEmpty(text))
+        {
+            Debug.Log(text);
+        }
+
+        HideWindow?.Invoke(this, EventArgs.Empty);
+
+        ProfileService profileService = AppBootstrap.Instance.ProfileService;
+        profileService.CreateProfile(text);
     }
 
     private void OnDestroy()

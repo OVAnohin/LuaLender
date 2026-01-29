@@ -44,16 +44,5 @@ public class ProfileMenuController : MonoBehaviour
     {
         profileMenuUI.Deinitialize();
     }
-
-    //public void OnCreateProfileClicked(string playerName)
-    //{
-    //    if (string.IsNullOrWhiteSpace(playerName))
-    //    {
-    //        Debug.Log("Name is empty");
-    //        return;
-    //    }
-
-    //    _profileService.CreateProfile(playerName);
-    //}
 }
 

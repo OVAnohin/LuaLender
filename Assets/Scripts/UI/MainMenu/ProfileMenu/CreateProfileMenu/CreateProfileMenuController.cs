@@ -11,6 +11,9 @@ public class CreateProfileMenuController : MonoBehaviour
 
     private void Awake()
     {
+        if (createProfileMenuUI.gameObject.activeSelf == false)
+            createProfileMenuUI.gameObject.SetActive(true);
+
         createProfileMenuUI.Initialize(this);
     }
 

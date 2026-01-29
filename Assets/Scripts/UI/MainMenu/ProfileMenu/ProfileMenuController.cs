@@ -7,11 +7,15 @@ public class ProfileMenuController : MonoBehaviour
     [SerializeField] private MainMenuController mainMenuController;
 
     public event EventHandler CreateNewProfileMenuClicked;
+    public event EventHandler SelectProfileMenuClicked;
     public event EventHandler ShowWindow;
     public event EventHandler HideWindow;
 
     private void Awake()
     {
+        if (profileMenuUI.gameObject.activeSelf == false)
+            profileMenuUI.gameObject.SetActive(true);
+
         profileMenuUI.Initialize(this);
     }
 
@@ -43,6 +47,11 @@ public class ProfileMenuController : MonoBehaviour
     private void OnDestroy()
     {
         profileMenuUI.Deinitialize();
+    }
+
+    internal void OnSelectProfileMenuClicked()
+    {
+        SelectProfileMenuClicked?.Invoke(this, EventArgs.Empty);
     }
 }
 

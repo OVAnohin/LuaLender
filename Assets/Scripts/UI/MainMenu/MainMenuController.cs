@@ -44,7 +44,6 @@ public class MainMenuController : MonoBehaviour
 
     public void OnProfileClicked()
     {
-        Debug.Log("OnProfileClicked");
         ProfileMenuClicked?.Invoke(this, EventArgs.Empty);
     }
 

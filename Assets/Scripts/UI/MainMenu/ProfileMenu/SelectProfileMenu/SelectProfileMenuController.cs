@@ -9,8 +9,12 @@ public class SelectProfileMenuController : MonoBehaviour
     public event EventHandler ShowWindow;
     public event EventHandler HideWindow;
 
+    private ProfileService _profileService;
+
     private void Awake()
     {
+        _profileService = AppBootstrap.Instance.ProfileService;
+
         if (selectProfileMenuUI.gameObject.activeSelf == false)
             selectProfileMenuUI.gameObject.SetActive(true);
 

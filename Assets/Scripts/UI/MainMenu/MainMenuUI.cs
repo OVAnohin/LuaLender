@@ -10,29 +10,41 @@ public class MainMenuUI : MonoBehaviour
     [SerializeField] private Button quitButton;
     [SerializeField] private TextMeshProUGUI currentProfile;
 
-    private MainMenuController _controller;
+    private MainMenuController _mainMenuController;
 
-    private void Awake()
+    public void Initialize(MainMenuController mainMenuController)
     {
-        UserProfile userProfile = AppBootstrap.Instance.ProfileService.ActiveProfile;
+        _mainMenuController = mainMenuController;
 
-        if (userProfile == null)
-            currentProfile.text = "Нет профиля.";
-        else
-            currentProfile.text = userProfile.PlayerInfo.PlayerName;
+        playButton.onClick.AddListener(_mainMenuController.OnPlayClicked);
+        profileButton.onClick.AddListener(_mainMenuController.OnProfileClicked);
+        settingsButton.onClick.AddListener(_mainMenuController.OnSettingsClicked);
+        quitButton.onClick.AddListener(_mainMenuController.OnQuitClicked);
+
+        Subscribe();
     }
 
-    public void Initialize(MainMenuController controller)
+    private void Subscribe()
     {
-        _controller = controller;
-
-        playButton.onClick.AddListener(_controller.OnPlayClicked);
-        profileButton.onClick.AddListener(_controller.OnProfileClicked);
-        settingsButton.onClick.AddListener(_controller.OnSettingsClicked);
-        quitButton.onClick.AddListener(_controller.OnQuitClicked);
+        _mainMenuController.UpdatePlayButtonStatus += UpdatePlayButtonState;
+        _mainMenuController.UpdateUserName += UpdateUserName;
     }
 
-    public void UpdatePlayButtonState(bool isInteractable)
+    public void Deinitialize()
+    {
+        if (_mainMenuController == null)
+            return;
+
+        _mainMenuController.UpdatePlayButtonStatus -= UpdatePlayButtonState;
+        _mainMenuController.UpdateUserName -= UpdateUserName;
+    }
+
+    private void UpdateUserName(string userName)
+    {
+        currentProfile.text = userName;
+    }
+
+    private void UpdatePlayButtonState(bool isInteractable)
     {
         playButton.interactable = isInteractable;
     }

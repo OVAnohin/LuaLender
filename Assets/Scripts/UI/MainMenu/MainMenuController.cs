@@ -7,6 +7,8 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private MainMenuUI mainMenuUI;
 
     public event EventHandler ProfileMenuClicked;
+    public event Action<bool> UpdatePlayButtonStatus;
+    public event Action<string> UpdateUserName;
     //public event EventHandler SettingsMenuClicked;
 
     private ProfileService _profileService;
@@ -27,7 +29,7 @@ public class MainMenuController : MonoBehaviour
         _profileService.ProfilesListChanged += OnProfilesListChanged;
 
         // Инициализация кнопки Play
-        UpdatePlayButtonState();
+        UpdateMainMenuData();
     }
 
     private void OnDisable()
@@ -60,16 +62,27 @@ public class MainMenuController : MonoBehaviour
 
     private void OnActiveProfileChanged(UserProfile profile)
     {
-        UpdatePlayButtonState();
+        UpdateMainMenuData();
     }
 
     private void OnProfilesListChanged(IReadOnlyList<UserProfile> profiles)
     {
-        UpdatePlayButtonState();
+        UpdateMainMenuData();
     }
 
-    private void UpdatePlayButtonState()
+    private void UpdateMainMenuData()
     {
-        mainMenuUI.UpdatePlayButtonState(_profileService.ActiveProfile != null);
+        UpdatePlayButtonStatus?.Invoke(_profileService.ActiveProfile != null);
+
+        string userName = "No User";
+        if (_profileService.ActiveProfile != null)
+            userName = _profileService.ActiveProfile.PlayerInfo.PlayerName;
+
+        UpdateUserName?.Invoke(userName);
+    }
+
+    private void OnDestroy()
+    {
+        mainMenuUI.Deinitialize();
     }
 }

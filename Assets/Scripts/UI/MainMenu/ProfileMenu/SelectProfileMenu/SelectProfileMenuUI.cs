@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,13 +8,38 @@ public class SelectProfileMenuUI : MonoBehaviour
 {
     [SerializeField] private Button okButton;
     [SerializeField] private Button closeButton;
+    [SerializeField] private Button upButton;
+    [SerializeField] private Button downButton;
+    [SerializeField] private Button[] profiles;
+
+    public int NumberOfProfiles => _numberOfProfiles;
+    public int SectctedIndex => _selectedIndex;
 
     private SelectProfileMenuController _selectProfileMenuController;
     private CanvasGroup _canvasGroup;
+    private int _selectedIndex;
+    private List<ProfileMenuEventArgs> _currentProfiles;
+    private int _numberOfProfiles;
 
     private void Awake()
     {
         _canvasGroup = GetComponent<CanvasGroup>();
+
+        _numberOfProfiles = profiles.Length;
+        _selectedIndex = -1;
+        for (int i = 0; i < profiles.Length; i++)
+        {
+            int index = i;
+            profiles[i].onClick.AddListener(() => Select(index));
+        }
+    }
+
+    private void Select(int index)
+    {
+        _selectedIndex = index;
+
+        for (int i = 0; i < profiles.Length; i++)
+            profiles[i].interactable = i != index;
     }
 
     internal void Initialize(SelectProfileMenuController selectProfileMenuController)
@@ -21,7 +47,9 @@ public class SelectProfileMenuUI : MonoBehaviour
         _selectProfileMenuController = selectProfileMenuController;
 
         okButton.onClick.AddListener(_selectProfileMenuController.OnOkClicked);
-        closeButton.onClick.AddListener(_selectProfileMenuController.OnCloseSelectProfileMenuClicked);
+        closeButton.onClick.AddListener(_selectProfileMenuController.OnCloseClicked);
+        upButton.onClick.AddListener(_selectProfileMenuController.OnUpClicked);
+        downButton.onClick.AddListener(_selectProfileMenuController.OnDownClicked);
 
         Subscribe();
     }
@@ -30,6 +58,7 @@ public class SelectProfileMenuUI : MonoBehaviour
     {
         _selectProfileMenuController.ShowWindow += ShowWindow;
         _selectProfileMenuController.HideWindow += HideWindow;
+        _selectProfileMenuController.CurrentProfileListUpdated += CurrentProfileListUpdated;
     }
 
     public void Deinitialize()
@@ -39,11 +68,27 @@ public class SelectProfileMenuUI : MonoBehaviour
 
         _selectProfileMenuController.ShowWindow -= ShowWindow;
         _selectProfileMenuController.HideWindow -= HideWindow;
+        _selectProfileMenuController.CurrentProfileListUpdated -= CurrentProfileListUpdated;
     }
 
     private void Start()
     {
         HideWindow(null, null);
+    }
+
+    private void CurrentProfileListUpdated(object sender, List<ProfileMenuEventArgs> profileArgs)
+    {
+        _currentProfiles = profileArgs;
+
+        for (int i = 0; i < profiles.Length; i++)
+        {
+            TextMeshProUGUI textMeshPro = profiles[i].gameObject.GetComponentInChildren<TextMeshProUGUI>();
+            textMeshPro.text = _currentProfiles[i].PlayerName;
+            profiles[i].interactable = true;
+
+            if (_currentProfiles[i].ProfileId.Equals("Zero"))
+                profiles[i].enabled = false;    
+        }
     }
 
     private void ShowWindow(object sender, System.EventArgs e)

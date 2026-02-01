@@ -19,7 +19,7 @@ public class LanderMover : MonoBehaviour
 
     private Rigidbody2D _rigidbody2D;
     private LanderFuelTank _fuelTank;
-    private LevelStateController _gameFlowController;
+    private LevelStateController _levelStateController;
     private LanderInputActions _input;
     private bool _isInitialized = false;
 
@@ -35,12 +35,12 @@ public class LanderMover : MonoBehaviour
         _input = new LanderInputActions();
     }
 
-    public void Initialize(LevelStateController gameFlowController)
+    public void Initialize(LevelStateController levelStateController)
     {
         if (_isInitialized)
             return;
 
-        _gameFlowController = gameFlowController;
+        _levelStateController = levelStateController;
         _isInitialized = true;
     }
 
@@ -80,11 +80,11 @@ public class LanderMover : MonoBehaviour
 
     private void OnAnyKeyPressed(InputAction.CallbackContext ctx)
     {
-        if (_gameFlowController.CurrentPhase != LevelPhase.Ready)
+        if (_levelStateController.CurrentPhase != LevelPhase.Ready)
             return;
 
         _rigidbody2D.gravityScale = GRAVITY_NORMAL;
-        _gameFlowController.SetPhase(LevelPhase.Playing);
+        _levelStateController.SetPhase(LevelPhase.Playing);
     }
 
     private void OnThrust(InputAction.CallbackContext ctx)
@@ -141,7 +141,7 @@ public class LanderMover : MonoBehaviour
     {
         bool engineActive = false;
 
-        if (_gameFlowController.CurrentPhase != LevelPhase.Playing || !_fuelTank.HasFuel)
+        if (_levelStateController.CurrentPhase != LevelPhase.Playing || !_fuelTank.HasFuel)
         {
             EngineStateChanged?.Invoke(false);
             return;

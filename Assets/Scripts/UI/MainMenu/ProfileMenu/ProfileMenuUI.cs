@@ -8,7 +8,7 @@ public class ProfileMenuUI : MonoBehaviour
     [SerializeField] private Button closeButton;
     [SerializeField] private Button createNewProfileButton;
     [SerializeField] private Button selectButton;
-    //[SerializeField] private Button deleteButton;
+    [SerializeField] private Button deleteButton;
 
     private ProfileMenuController _profileMenuController;
     private CanvasGroup _canvasGroup;
@@ -25,6 +25,7 @@ public class ProfileMenuUI : MonoBehaviour
         closeButton.onClick.AddListener(_profileMenuController.OnCloseProfileMenuClicked);
         selectButton.onClick.AddListener(_profileMenuController.OnSelectProfileMenuClicked);
         createNewProfileButton.onClick.AddListener(_profileMenuController.OnCreateNewProfileClicked);
+        deleteButton.onClick.AddListener(_profileMenuController.OnDeleteProfileClicked);
 
         Subscribe();
     }

@@ -24,11 +24,9 @@ public class MainMenuController : MonoBehaviour
 
     private void OnEnable()
     {
-        // Подписка на события ProfileService
         _profileService.ActiveProfileChanged += OnActiveProfileChanged;
         _profileService.ProfilesListChanged += OnProfilesListChanged;
 
-        // Инициализация кнопки Play
         UpdateMainMenuData();
     }
 

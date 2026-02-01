@@ -12,7 +12,6 @@ public class SelectProfileMenuController : MonoBehaviour
     public event EventHandler<List<ProfileMenuEventArgs>> CurrentProfileListUpdated;
 
     private ProfileService _profileService;
-    private int _selectedIndex;
     private int[] _currentIndexes;
     private int _numberSelectableProfiles;
 
@@ -20,13 +19,9 @@ public class SelectProfileMenuController : MonoBehaviour
     {
         _profileService = AppBootstrap.Instance.ProfileService;
 
-        if (selectProfileMenuUI.gameObject.activeSelf == false)
-            selectProfileMenuUI.gameObject.SetActive(true);
-
         selectProfileMenuUI.Initialize(this);
 
         _numberSelectableProfiles = selectProfileMenuUI.NumberOfProfiles;
-        _selectedIndex = selectProfileMenuUI.SectctedIndex;
         _currentIndexes = new int[_numberSelectableProfiles];
 
         InitCurrentIndexes();
@@ -36,7 +31,6 @@ public class SelectProfileMenuController : MonoBehaviour
     {
         _profileService.ActiveProfileChanged += OnActiveProfileChanged;
         _profileService.ProfilesListChanged += OnProfilesListChanged;
-        _profileService.ProfilesLoaded += OnProfilesLloaded;
 
         profileMenuController.SelectProfileMenuClicked += SelectProfileMenuClicked;
     }
@@ -45,7 +39,6 @@ public class SelectProfileMenuController : MonoBehaviour
     {
         _profileService.ActiveProfileChanged -= OnActiveProfileChanged;
         _profileService.ProfilesListChanged -= OnProfilesListChanged;
-        _profileService.ProfilesLoaded -= OnProfilesLloaded;
 
         profileMenuController.SelectProfileMenuClicked -= SelectProfileMenuClicked;
     }
@@ -54,23 +47,6 @@ public class SelectProfileMenuController : MonoBehaviour
     {
         for (int i = 0; i < _numberSelectableProfiles; i++)
             _currentIndexes[i] = i;
-
-        IReadOnlyList<UserProfile> profiles = _profileService.AllProfiles;
-        UserProfile profile = _profileService.ActiveProfile;
-
-        for (int i = 0; i < profiles.Count; i++)
-        {
-            if (profiles[i].ProfileId.Equals(profile.ProfileId))
-            {
-                _selectedIndex = i;
-                break;
-            }
-        }
-    }
-
-    private void OnProfilesLloaded()
-    {
-        Debug.Log("Profiles Loaded");
     }
 
     private void OnProfilesListChanged(IReadOnlyList<UserProfile> list)
@@ -85,6 +61,9 @@ public class SelectProfileMenuController : MonoBehaviour
 
     private void SelectProfileMenuClicked(object sender, EventArgs e)
     {
+        if (_profileService.ActiveProfile == null)
+            return;
+
         FillOutProfileMenu();
         ShowWindow?.Invoke(this, EventArgs.Empty);
     }
@@ -96,11 +75,18 @@ public class SelectProfileMenuController : MonoBehaviour
 
     public void OnOkClicked()
     {
-        Debug.Log("OnOkClicked");
         HideWindow?.Invoke(this, EventArgs.Empty);
 
-        //ProfileService profileService = AppBootstrap.Instance.ProfileService;
-        //profileService.CreateProfile(text);
+        int selectedIndex = selectProfileMenuUI.SectctedIndex;
+        if (selectedIndex == -1)
+            return;
+
+        IReadOnlyList<UserProfile> profiles = _profileService.AllProfiles;
+        int indexInProfiles = _currentIndexes[selectedIndex];
+        string newProfileID = profiles[indexInProfiles].ProfileId;
+        _profileService.SetActiveProfile(newProfileID);
+
+        profileMenuController.OnCloseProfileMenuClicked();
     }
 
     private void OnDestroy()
@@ -152,7 +138,12 @@ public class SelectProfileMenuController : MonoBehaviour
         if (profiles != null)
         {
             for (int i = 0; i < _currentIndexes.Length; i++)
+            {
+                if (i >= profiles.Count)
+                    continue;
+
                 profileList[i] = new ProfileMenuEventArgs(profiles[_currentIndexes[i]].ProfileId, profiles[_currentIndexes[i]].PlayerInfo.PlayerName, i);
+            }
         }
 
         CurrentProfileListUpdated?.Invoke(this, profileList);

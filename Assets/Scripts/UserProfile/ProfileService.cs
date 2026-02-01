@@ -52,8 +52,7 @@ public class ProfileService
         var profile = new UserProfile(playerName, avatarId);
         _profiles.Add(profile);
 
-        if (ActiveProfile == null)
-            SetActiveProfile(profile.ProfileId);
+        SetActiveProfile(profile.ProfileId);
 
         SaveProfiles();
         ProfilesListChanged?.Invoke(AllProfiles);
@@ -93,6 +92,7 @@ public class ProfileService
         if (profile == null) return;
 
         ActiveProfile = profile;
+        SaveProfiles();
         ActiveProfileChanged?.Invoke(ActiveProfile);
     }
 }

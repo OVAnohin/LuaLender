@@ -18,7 +18,6 @@ public class SelectProfileMenuUI : MonoBehaviour
     private SelectProfileMenuController _selectProfileMenuController;
     private CanvasGroup _canvasGroup;
     private int _selectedIndex;
-    private List<ProfileMenuEventArgs> _currentProfiles;
     private int _numberOfProfiles;
 
     private void Awake()
@@ -78,16 +77,15 @@ public class SelectProfileMenuUI : MonoBehaviour
 
     private void CurrentProfileListUpdated(object sender, List<ProfileMenuEventArgs> profileArgs)
     {
-        _currentProfiles = profileArgs;
-
         for (int i = 0; i < profiles.Length; i++)
         {
             TextMeshProUGUI textMeshPro = profiles[i].gameObject.GetComponentInChildren<TextMeshProUGUI>();
-            textMeshPro.text = _currentProfiles[i].PlayerName;
+            textMeshPro.text = profileArgs[i].PlayerName;
             profiles[i].interactable = true;
+            _selectedIndex = -1;
 
-            if (_currentProfiles[i].ProfileId.Equals("Zero"))
-                profiles[i].enabled = false;    
+            if (profileArgs[i].ProfileId.Equals("Zero"))
+                profiles[i].enabled = false;
         }
     }
 

@@ -11,9 +11,6 @@ public class CreateProfileMenuController : MonoBehaviour
 
     private void Awake()
     {
-        if (createProfileMenuUI.gameObject.activeSelf == false)
-            createProfileMenuUI.gameObject.SetActive(true);
-
         createProfileMenuUI.Initialize(this);
     }
 
@@ -39,15 +36,13 @@ public class CreateProfileMenuController : MonoBehaviour
 
     internal void OnOkClicked(string text)
     {
-        if (!System.String.IsNullOrEmpty(text))
-        {
-            Debug.Log(text);
-        }
-
         HideWindow?.Invoke(this, EventArgs.Empty);
 
         ProfileService profileService = AppBootstrap.Instance.ProfileService;
-        profileService.CreateProfile(text);
+        UserProfile newProfile =  profileService.CreateProfile(text);
+        profileService.SetActiveProfile(newProfile.ProfileId);
+
+        profileMenuController.OnCloseProfileMenuClicked();
     }
 
     private void OnDestroy()

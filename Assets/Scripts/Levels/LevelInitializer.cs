@@ -50,8 +50,9 @@ public class LevelInitializer : MonoBehaviour
     private void SpawnLander()
     {
         _lander = Instantiate(landerPrefab, new Vector3(0f, _spawnPointLander.y, 0f), Quaternion.identity).GetComponent<Lander>();
-        SaveData gameSessionData = SaveService.Load();
-        _lander.Initialize(levelStateController, gameSessionData.Score);
+
+        int score = AppBootstrap.Instance.ProfileService.ActiveProfile.Statistics.TotalScore;
+        _lander.Initialize(levelStateController, score);
 
         _lander.Crashed += OnLanderCrashed;
 

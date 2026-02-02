@@ -34,6 +34,12 @@ public class LanderHUD : MonoBehaviour
         levelInitializer.LanderDestroyed += OnLanderDestroyed;
     }
 
+    private void OnDisable()
+    {
+        levelInitializer.LanderSpawned -= OnLanderSpawned;
+        levelInitializer.LanderDestroyed -= OnLanderDestroyed;
+    }
+
     private void OnLanderSpawned(object sender, LanderEventArgs lander)
     {
         Unsubscribe();
@@ -48,12 +54,6 @@ public class LanderHUD : MonoBehaviour
         _lander.ScoreChanged += UpdateScore;
         _landerFuelTank.FuelChanged += UpdateFuel;
         UpdateScore(null, EventArgs.Empty);
-    }
-
-    private void OnDisable()
-    {
-        levelInitializer.LanderSpawned -= OnLanderSpawned;
-        levelInitializer.LanderDestroyed -= OnLanderDestroyed;
     }
 
     private void OnLanderDestroyed(object sender, LanderEventArgs lander)
@@ -105,7 +105,6 @@ public class LanderHUD : MonoBehaviour
 
     private void UpdateScore(object sender, EventArgs e)
     {
-        SaveService.Save(new SaveData(_lander.Score));
         textScore.text = _lander.Score.ToString();
     }
 

@@ -2,29 +2,40 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(CanvasGroup))]
 public class LandedUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI titleTextMesh;
     [SerializeField] private TextMeshProUGUI statsTextMesh;
     [SerializeField] private LevelInitializer levelInitializer;
-    [SerializeField] private CanvasGroup canvasGroup;
-    [SerializeField] private Button nextButton;
+    [SerializeField] private Button restartButton;
+    [SerializeField] private Button returnMainMenuButton;
 
     private Lander _lander;
+    private CanvasGroup _canvasGroup;
+    //private LevelController _levelController;
+
+    public void Initialize(LevelController levelController)
+    {
+        restartButton.onClick.AddListener(levelController.OnRestartClicked);
+        returnMainMenuButton.onClick.AddListener(levelController.OnReturnMainMenuClicked);
+
+        //Subscribe();
+    }
 
     private void Awake()
     {
-        nextButton.onClick.AddListener(OnNextClicked);
+        _canvasGroup = GetComponent<CanvasGroup>(); 
+        //nextButton.onClick.AddListener(OnNextClicked);
         Hide();
     }
 
-    private void OnNextClicked()
-    {
-        SceneManager.LoadScene(SceneNames.GameScene.ToString());
-    }
+    //private void OnNextClicked()
+    //{
+    //    SceneManager.LoadScene(SceneNames.GameScene.ToString());
+    //}
 
     private void OnEnable()
     {
@@ -37,6 +48,21 @@ public class LandedUI : MonoBehaviour
         levelInitializer.LanderSpawned -= OnLanderSpawned;
         levelInitializer.LanderDestroyed -= OnLanderDestroyed;
     }
+
+    //private void Subscribe()
+    //{
+    //    _mainMenuController.UpdatePlayButtonStatus += UpdatePlayButtonState;
+    //    _mainMenuController.UpdateUserName += UpdateUserName;
+    //}
+
+    //public void Deinitialize()
+    //{
+    //    if (_mainMenuController == null)
+    //        return;
+
+    //    _mainMenuController.UpdatePlayButtonStatus -= UpdatePlayButtonState;
+    //    _mainMenuController.UpdateUserName -= UpdateUserName;
+    //}
 
     private void OnLanderSpawned(object sender, LanderEventArgs lander)
     {
@@ -89,15 +115,15 @@ public class LandedUI : MonoBehaviour
 
     private void Show()
     {
-        canvasGroup.alpha = 1f;
-        canvasGroup.interactable = true;
-        canvasGroup.blocksRaycasts = true;
+        _canvasGroup.alpha = 1f;
+        _canvasGroup.interactable = true;
+        _canvasGroup.blocksRaycasts = true;
     }
 
     private void Hide()
     {
-        canvasGroup.alpha = 0f;
-        canvasGroup.interactable = false;
-        canvasGroup.blocksRaycasts = false;
+        _canvasGroup.alpha = 0f;
+        _canvasGroup.interactable = false;
+        _canvasGroup.blocksRaycasts = false;
     }
 }

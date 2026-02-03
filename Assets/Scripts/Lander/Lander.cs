@@ -18,6 +18,8 @@ public partial class Lander : MonoBehaviour
     private int _score = 0;
     public int Score => _score;
 
+    private int _playPoints = 0;
+
     private bool _isAlive = true;
     public bool IsAlive => _isAlive;
     public float SoftLandingVelocity => config.SoftLandingVelocity;
@@ -91,6 +93,7 @@ public partial class Lander : MonoBehaviour
         int landingScore = LandingPointsCalculation(landingPad, relativeVelocityMagnitude, dotVector);
         _score += landingScore;
         ScoreChanged?.Invoke(this, EventArgs.Empty);
+        landingScore += _playPoints;
         Land(landingScore, dotVector, relativeVelocityMagnitude);
     }
 
@@ -140,6 +143,7 @@ public partial class Lander : MonoBehaviour
     internal void OnCoinPickupContact(CoinPickup coinPickup)
     {
         _score += coinPickup.GetPoints;
+        _playPoints += coinPickup.GetPoints;
         ScoreChanged?.Invoke(this, EventArgs.Empty);
     }
 }

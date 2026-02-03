@@ -36,10 +36,7 @@ public class LevelController : MonoBehaviour
         Unsubscribe();
 
         _lander = lander.Lander;
-
-        _lander.ScoreChanged += UpdateScore;
         _lander.Landed += LanderOnLanded;
-        UpdateScore(null, EventArgs.Empty);
     }
 
     private void OnLanderDestroyed(object sender, LanderEventArgs lander)
@@ -51,30 +48,21 @@ public class LevelController : MonoBehaviour
     private void Unsubscribe()
     {
         if (_lander != null)
-        {
-            _lander.ScoreChanged -= UpdateScore;
             _lander.Landed -= LanderOnLanded;
-        }
-            
-        _lander = null;
-    }
 
-    private void UpdateScore(object sender, EventArgs e)
-    {
-        Debug.Log("UpdateScore");
+        _lander = null;
     }
 
     private void LanderOnLanded(object sender, Lander.LanderScoreCalculatedEventArgs args)
     {
-        //if (args.LandingType.Equals(Lander.LandingType.Success))
-        //{
-        //    titleTextMesh.text = "Successful Landing!";
-        //}
-        //else
-        //{
-        //    titleTextMesh.color = Color.red;
-        //    titleTextMesh.text = args.LandingType.ToString();
-        //}
+        UserProfile userProfile = _profileService.ActiveProfile;
+
+        if (args.LandingType.Equals(Lander.LandingType.Success))
+            userProfile.Statistics.RegisterWin(args.Score, 0);
+        else
+            userProfile.Statistics.RegisterLose(args.Score, 0);
+
+        _profileService.SaveProfiles();
     }
 
     internal void OnRestartClicked()

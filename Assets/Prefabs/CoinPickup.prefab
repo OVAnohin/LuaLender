@@ -82,7 +82,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76b93587eb567e84f9c58b8ef56ae9ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoinPickup
-  PointsValue: 100
+  pointsValue: 100
 --- !u!1 &6428415107136060485
 GameObject:
   m_ObjectHideFlags: 0

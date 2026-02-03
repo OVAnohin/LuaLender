@@ -15,27 +15,18 @@ public class LandedUI : MonoBehaviour
 
     private Lander _lander;
     private CanvasGroup _canvasGroup;
-    //private LevelController _levelController;
 
     public void Initialize(LevelController levelController)
     {
         restartButton.onClick.AddListener(levelController.OnRestartClicked);
         returnMainMenuButton.onClick.AddListener(levelController.OnReturnMainMenuClicked);
-
-        //Subscribe();
     }
 
     private void Awake()
     {
         _canvasGroup = GetComponent<CanvasGroup>(); 
-        //nextButton.onClick.AddListener(OnNextClicked);
         Hide();
     }
-
-    //private void OnNextClicked()
-    //{
-    //    SceneManager.LoadScene(SceneNames.GameScene.ToString());
-    //}
 
     private void OnEnable()
     {
@@ -48,21 +39,6 @@ public class LandedUI : MonoBehaviour
         levelInitializer.LanderSpawned -= OnLanderSpawned;
         levelInitializer.LanderDestroyed -= OnLanderDestroyed;
     }
-
-    //private void Subscribe()
-    //{
-    //    _mainMenuController.UpdatePlayButtonStatus += UpdatePlayButtonState;
-    //    _mainMenuController.UpdateUserName += UpdateUserName;
-    //}
-
-    //public void Deinitialize()
-    //{
-    //    if (_mainMenuController == null)
-    //        return;
-
-    //    _mainMenuController.UpdatePlayButtonStatus -= UpdatePlayButtonState;
-    //    _mainMenuController.UpdateUserName -= UpdateUserName;
-    //}
 
     private void OnLanderSpawned(object sender, LanderEventArgs lander)
     {

@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92f4a6e09bc9f1d4cb3f4c4aecd92c3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LandingPad
-  scoreMultipler: 0
+  scoreMultipler: 1
 --- !u!114 &5686719641098656290
 MonoBehaviour:
   m_ObjectHideFlags: 0

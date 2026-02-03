@@ -17,10 +17,11 @@ public class PlayerStatistics
         TotalPlayTime += playTime;
     }
 
-    public void RegisterLose(float playTime)
+    public void RegisterLose(int score, float playTime)
     {
         LevelsPlayed++;
         LevelsLose++;
+        TotalScore += score;
         TotalPlayTime += playTime;
     }
 }

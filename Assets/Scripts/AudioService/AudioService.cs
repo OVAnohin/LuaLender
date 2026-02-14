@@ -18,16 +18,20 @@ public class AudioService : IAudioService
 
     private readonly AudioSource _musicSource;
     private readonly AudioSource _sfxSource;
+    private readonly AudioSource _engineSource;
 
     private readonly Dictionary<AppState, AudioClip> _musicByState;
     private readonly Dictionary<string, AudioClip> _sfxById;
+    private readonly AudioClip _engineClip;
 
-    public AudioService(AudioSource musicSource, AudioSource sfxSource, Dictionary<AppState, AudioClip> musicByState, Dictionary<string, AudioClip> sfxById)
+    public AudioService(AudioSource musicSource, AudioSource sfxSource, AudioSource engineSource, Dictionary<AppState, AudioClip> musicByState, Dictionary<string, AudioClip> sfxById, AudioClip engineClip)
     {
         _musicSource = musicSource;
         _sfxSource = sfxSource;
+        _engineSource = engineSource;
         _musicByState = musicByState;
         _sfxById = sfxById;
+        _engineClip = engineClip;
     }
 
     // =====================
@@ -122,6 +126,25 @@ public class AudioService : IAudioService
     }
 
     // =====================
+    // Engine
+    // =====================
+    public void PlayEngineLoop()
+    {
+        if (_engineSource.isPlaying)
+            return;
+
+        _engineSource.clip = _engineClip;
+        _engineSource.loop = true;
+        _engineSource.Play();
+    }
+
+    public void StopEngineLoop()
+    {
+        if (_engineSource.isPlaying)
+            _engineSource.Stop();
+    }
+
+    // =====================
     // Helpers
     // =====================
 
@@ -129,8 +152,11 @@ public class AudioService : IAudioService
     {
         float music = IsMuted ? 0f : MusicVolume;
         float sfx = IsMuted ? 0f : SfxVolume;
+        //временно
+        music = 0.4f;
 
         _musicSource.volume = music;
         _sfxSource.volume = sfx;
+        _engineSource.volume = sfx;
     }
 }

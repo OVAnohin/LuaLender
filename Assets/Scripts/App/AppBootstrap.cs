@@ -7,6 +7,7 @@ public class AppBootstrap : MonoBehaviour
 {
     [SerializeField] private AudioSource MusicSource;
     [SerializeField] private AudioSource SfxSource;
+    [SerializeField] private AudioSource EngineSource;
 
     [SerializeField] private AudioClip GameplayMusic;
     [SerializeField] private AudioClip MenuMusic;
@@ -57,15 +58,16 @@ public class AppBootstrap : MonoBehaviour
             { "Coin", CoinSfx },
             { "Crash", CrashSfx },
             { "FuelPickup", FuelPickupSfx },
-            { "LandingSuccess", LandingSuccessSfx },
-            { "Engine", EngineSfx }
+            { "LandingSuccess", LandingSuccessSfx }
         };
 
         AudioService = new AudioService(
             MusicSource,
             SfxSource,
+            EngineSource,
             musicMap,
-            sfxMap
+            sfxMap,
+            EngineSfx
         );
 
         AudioService.Initialize();

@@ -48,4 +48,11 @@ public interface IAudioService
     // ======================
 
     void Mute(bool mute);
+
+    // =====================
+    // Engine
+    // =====================
+
+    public void PlayEngineLoop();
+    public void StopEngineLoop();
 }

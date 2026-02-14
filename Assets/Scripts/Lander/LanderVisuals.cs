@@ -44,10 +44,17 @@ public class LanderVisuals : MonoBehaviour
         Destroy(ps.gameObject, ps.main.duration);
     }
 
-    private void LanderMoverEngineStateChanged(bool isEngieActive)
+    private void LanderMoverEngineStateChanged(bool isEngineActive)
     {
-        if (isEngieActive == false)
+        var audio = AppBootstrap.Instance.AudioService;
+        if (isEngineActive == false)
+        {
+            audio.StopEngineLoop();
             LanderMoverEngineOff(null, null);
+            return;
+        }
+
+        audio.PlayEngineLoop();
     }
 
     private void LanderMoverEngineOff(object sender, EventArgs e)
@@ -78,10 +85,5 @@ public class LanderVisuals : MonoBehaviour
     {
         ParticleSystem.EmissionModule emissionModule = particleSystem.emission;
         emissionModule.enabled = isEnabled;
-    }
-
-    private void PlaySfxEngine()
-    {
-        AppBootstrap.Instance.AudioService.PlaySfx("Engine");
     }
 }

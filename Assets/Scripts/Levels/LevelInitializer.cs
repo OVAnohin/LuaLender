@@ -55,14 +55,24 @@ public class LevelInitializer : MonoBehaviour
         _lander.Initialize(levelStateController, score);
 
         _lander.Crashed += OnLanderCrashed;
+        _lander.Landed += OnLanderLanded;
 
         LanderSpawned?.Invoke(this, new LanderEventArgs(_lander));
+    }
+
+    private void OnLanderLanded(object sender, Lander.LanderScoreCalculatedEventArgs args)
+    {
+        if (args.LandingType.Equals(Lander.LandingType.Success))
+            AppBootstrap.Instance.AudioService.PlaySfx("LandingSuccess");
     }
 
     private void OnLanderCrashed(object sender, EventArgs e)
     {
         var lander = (Lander)sender;
         lander.Crashed -= OnLanderCrashed;
+        lander.Landed -= OnLanderLanded;
+
+        AppBootstrap.Instance.AudioService.PlaySfx("Crash");
 
         LanderDestroyed?.Invoke(this, new LanderEventArgs(lander));
     }
@@ -77,12 +87,21 @@ public class LevelInitializer : MonoBehaviour
             float pointX = Random.Range(_spawnPointsLandingPad[i].x - 3, _spawnPointsLandingPad[i].x + 3);
             float pointY = Random.Range(_spawnPointsLandingPad[i].y + 5, _spawnPointsLandingPad[i].y + 9);
             randomPos = new Vector3(pointX, pointY, 0f);
-            Instantiate(fuelPickupPrefabs[Random.Range(0, fuelPickupPrefabs.Length)], randomPos, Quaternion.identity);
+            var fuelPickupObject = Instantiate(fuelPickupPrefabs[Random.Range(0, fuelPickupPrefabs.Length)], randomPos, Quaternion.identity);
+
+            var fuelPickup = fuelPickupObject.GetComponent<FuelPickup>();
+            if (fuelPickup != null)
+                fuelPickup.Collected += () => { AppBootstrap.Instance.AudioService.PlaySfx("FuelPickup"); };
 
             pointX = Random.Range(_spawnPointsLandingPad[i].x - 3, _spawnPointsLandingPad[i].x + 3);
             pointY = Random.Range(_spawnPointsLandingPad[i].y + 10, _spawnPointsLandingPad[i].y + 12);
             randomPos = new Vector3(pointX, pointY, 0f);
-            Instantiate(coinPickupPrefabs[Random.Range(0, coinPickupPrefabs.Length)], randomPos, Quaternion.identity);
+            var coinObject = Instantiate(coinPickupPrefabs[Random.Range(0, coinPickupPrefabs.Length)], randomPos, Quaternion.identity);
+
+            var coin = coinObject.GetComponent<CoinPickup>();
+            if (coin != null)
+                coin.Collected += () => { AppBootstrap.Instance.AudioService.PlaySfx("Coin"); };
+
         }
     }
 }

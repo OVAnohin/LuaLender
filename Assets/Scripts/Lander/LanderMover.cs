@@ -167,7 +167,12 @@ public class LanderMover : MonoBehaviour
             engineActive = true;
         }
 
+        //PlaySfxEngine();
         EngineStateChanged?.Invoke(engineActive);
     }
 
+    private void PlaySfxEngine()
+    {
+        AppBootstrap.Instance.AudioService.PlaySfx("Engine");
+    }
 }

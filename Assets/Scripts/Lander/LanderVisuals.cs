@@ -79,4 +79,9 @@ public class LanderVisuals : MonoBehaviour
         ParticleSystem.EmissionModule emissionModule = particleSystem.emission;
         emissionModule.enabled = isEnabled;
     }
+
+    private void PlaySfxEngine()
+    {
+        AppBootstrap.Instance.AudioService.PlaySfx("Engine");
+    }
 }
